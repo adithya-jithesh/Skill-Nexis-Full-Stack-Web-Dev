@@ -288,6 +288,22 @@ img { max-width: 100%; display: block; }
 .card:hover { transform: translateY(-6px); border-color: var(--accent); }
 
 .card__title  { font-size: 1.3rem; margin-bottom: 0.2rem; }
+
+/* small "In progress" pill sitting inline next to a card heading */
+.card__status {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 0.5rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--success);
+  background: rgba(61, 220, 151, 0.12);
+  border: 1px solid rgba(61, 220, 151, 0.3);
+}
 .card__period { font-size: 0.82rem; color: var(--accent); margin-bottom: 0.9rem; }
 .card__desc   { color: var(--text-muted); font-size: 0.95rem; flex-grow: 1; }
 

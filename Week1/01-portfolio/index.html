@@ -63,8 +63,10 @@
         <p>
           I enjoy working across the whole stack: designing React interfaces,
           writing FastAPI backends, modelling data in PostgreSQL, and wiring
-          in AI APIs where they genuinely add value. I'm currently deepening
-          my MERN stack skills through a full stack development program.
+          in AI APIs where they genuinely add value. Alongside that I'm building
+          a multi-modal deepfake detection system in PyTorch as my final year
+          project, and deepening my MERN stack skills through a full stack
+          development program.
         </p>
         <ul class="about__facts">
           <li><strong>Location</strong><span>Mumbai, India</span></li>
@@ -111,6 +113,31 @@
       <h2 class="section__title">Projects</h2>
 
       <div class="projects">
+        <article class="card">
+          <h3 class="card__title">
+            Multi-Modal Deepfake Detection
+            <span class="card__status">In progress</span>
+          </h3>
+          <p class="card__period">2026 &ndash; present &middot; Final year project (team of 2)</p>
+          <p class="card__desc">
+            Detects lip-sync deepfakes by exploiting the disagreement between
+            what a face appears to say and what the audio actually says &mdash; a
+            mismatch that survives compression. Five parallel streams
+            (EfficientNet-B0, Xception and DINOv2 for vision, plus lip-sync and
+            emotion cross-modal streams) emit embeddings rather than scores, which
+            an MLP fuses so weak visual artifacts can still combine with a strong
+            lip-sync mismatch. Trained on FakeAVCeleb v1.2; an earlier visual-only
+            stream reached 0.963 accuracy and 0.994 AUC.
+          </p>
+          <ul class="card__tags">
+            <li>Python</li><li>PyTorch</li><li>DINOv2</li>
+            <li>OpenCV</li><li>librosa</li><li>Streamlit</li>
+          </ul>
+          <a class="card__link" href="https://github.com/adithya-jithesh/deepfake-detection" target="_blank" rel="noopener">
+            View on GitHub &rarr;
+          </a>
+        </article>
+
         <article class="card">
           <h3 class="card__title">PCEase</h3>
           <p class="card__period">Aug 2025 &ndash; Dec 2025</p>
@@ -197,7 +224,7 @@
         </div>
         <div class="skills__group">
           <h3>Frameworks &amp; Libraries</h3>
-          <ul><li>React</li><li>Vite</li><li>FastAPI</li><li>Flutter</li><li>NumPy</li><li>Pandas</li></ul>
+          <ul><li>React</li><li>Vite</li><li>FastAPI</li><li>Flutter</li><li>PyTorch</li><li>NumPy</li><li>Pandas</li></ul>
         </div>
         <div class="skills__group">
           <h3>Databases</h3>
