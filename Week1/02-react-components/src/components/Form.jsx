@@ -15,7 +15,12 @@ import Button from "./Button";
  */
 function Form({ onAddProject }) {
   // One state object for all three fields, instead of three useState calls.
-  const [values, setValues] = useState({ title: "", description: "", tags: "" });
+  const [values, setValues] = useState({
+    title: "",
+    description: "",
+    tags: "",
+    status: "",
+  });
   const [errors, setErrors] = useState({});
 
   /**
@@ -62,6 +67,8 @@ function Form({ onAddProject }) {
     onAddProject({
       title: values.title.trim(),
       description: values.description.trim(),
+      // empty string = no badge, because "" is falsy in Card's {status && …}
+      status: values.status,
       // "react, vite, css" → ["react", "vite", "css"], empties removed
       tags: values.tags
         .split(",")
@@ -70,7 +77,7 @@ function Form({ onAddProject }) {
     });
 
     // reset the form back to empty
-    setValues({ title: "", description: "", tags: "" });
+    setValues({ title: "", description: "", tags: "", status: "" });
   }
 
   return (
@@ -116,6 +123,23 @@ function Form({ onAddProject }) {
           onChange={handleChange}
           placeholder="React, Vite, CSS (comma separated)"
         />
+      </div>
+
+      <div className="form__field">
+        <label htmlFor="status">Status</label>
+        {/* A <select> is a controlled input too — same value/onChange pair.
+            handleChange needs no changes: it reads name="status". */}
+        <select
+          id="status"
+          name="status"
+          value={values.status}
+          onChange={handleChange}
+        >
+          <option value="">No badge</option>
+          <option value="In progress">In progress</option>
+          <option value="Shipped">Shipped</option>
+          <option value="Archived">Archived</option>
+        </select>
       </div>
 
       <Button type="submit">Add Project</Button>
