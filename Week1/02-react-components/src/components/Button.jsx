@@ -1,5 +1,5 @@
 /**
- * Button — the most reusable component in the set.
+ * Button - the most reusable component in the set.
  *
  * Props:
  *   children  the button's label (whatever you put between the tags)

@@ -100,7 +100,7 @@ img { max-width: 100%; display: block; }
 }
 .nav__list a:hover::after { width: 100%; }
 
-/* Hamburger button — hidden on desktop, revealed in the media query */
+/* Hamburger button - hidden on desktop, revealed in the media query */
 .nav__toggle {
   display: none;
   flex-direction: column;
@@ -117,7 +117,7 @@ img { max-width: 100%; display: block; }
   transition: var(--transition);
 }
 
-/* the .is-open class is toggled by JavaScript — turns bars into an X */
+/* the .is-open class is toggled by JavaScript - turns bars into an X */
 .nav__toggle.is-open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
 .nav__toggle.is-open span:nth-child(2) { opacity: 0; }
 .nav__toggle.is-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
@@ -420,7 +420,7 @@ img { max-width: 100%; display: block; }
 }
 
 /* ============================================================
-   13. RESPONSIVE — MEDIA QUERIES
+   13. RESPONSIVE - MEDIA QUERIES
    Desktop styles are written first (above); these override them
    on smaller screens.
    ============================================================ */

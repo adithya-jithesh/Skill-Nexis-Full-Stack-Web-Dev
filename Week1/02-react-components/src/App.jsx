@@ -57,7 +57,7 @@ function App() {
   function handleAddProject(newProject) {
     setProjects((previous) => [
       // Date.now() is a quick unique id. A real app would use a UUID or a
-      // database id — never the array index, which changes on delete.
+      // database id - never the array index, which changes on delete.
       { ...newProject, id: Date.now() },
       ...previous, // spread the old items after the new one → newest first
     ]);
@@ -78,7 +78,7 @@ function App() {
     <div className={`app app--${theme}`}>
       <Header
         title="React Components Practice"
-        subtitle="Week 1 — Header, Footer, Card, Button and Form built as reusable components."
+        subtitle="Week 1 - Header, Footer, Card, Button and Form built as reusable components."
         count={projects.length}
         theme={theme}
         onToggleTheme={handleToggleTheme}

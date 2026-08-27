@@ -1,7 +1,7 @@
 import Button from "./Button";
 
 /**
- * Card — displays one project. Rendered once per item in the projects array.
+ * Card - displays one project. Rendered once per item in the projects array.
  *
  * Props:
  *   id           unique identifier, passed back up when removing
@@ -13,7 +13,7 @@ import Button from "./Button";
  *
  * This component holds no state of its own. Everything it shows comes from
  * props, and the only thing it does is call onRemove. That makes it a
- * "presentational" component — easy to reason about and easy to reuse.
+ * "presentational" component - easy to reason about and easy to reuse.
  */
 function Card({ id, title, description, tags = [], status, onRemove }) {
   return (
@@ -29,7 +29,7 @@ function Card({ id, title, description, tags = [], status, onRemove }) {
 
       <ul className="card__tags">
         {/* Rendering a list: .map() turns an array of strings into an array
-            of JSX elements. `key` must be unique among siblings — React uses
+            of JSX elements. `key` must be unique among siblings - React uses
             it to tell items apart when the list changes. */}
         {tags.map((tag) => (
           <li key={tag}>{tag}</li>

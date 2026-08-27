@@ -45,7 +45,7 @@ const errors = {
   message: document.getElementById("messageError"),
 };
 
-// Regex: something@something.something — good enough for client-side checks.
+// Regex: something@something.something - good enough for client-side checks.
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 function showError(key, message) {
@@ -87,7 +87,7 @@ function validateField(key) {
 Object.keys(fields).forEach((key) => {
   fields[key].addEventListener("blur", () => validateField(key));
   fields[key].addEventListener("input", () => {
-    // only clear a visible error while typing — don't nag mid-word
+    // only clear a visible error while typing - don't nag mid-word
     if (errors[key].textContent) validateField(key);
   });
 });
@@ -95,7 +95,7 @@ Object.keys(fields).forEach((key) => {
 form.addEventListener("submit", (event) => {
   event.preventDefault(); // stop the page from reloading
 
-  // validate ALL fields (don't short-circuit — we want every error shown)
+  // validate ALL fields (don't short-circuit - we want every error shown)
   const results = Object.keys(fields).map(validateField);
   const isValid = results.every(Boolean);
 

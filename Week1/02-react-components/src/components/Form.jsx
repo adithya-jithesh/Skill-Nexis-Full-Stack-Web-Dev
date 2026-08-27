@@ -2,7 +2,7 @@ import { useState } from "react";
 import Button from "./Button";
 
 /**
- * Form — adds a new project card.
+ * Form - adds a new project card.
  *
  * Props:
  *   onAddProject   function from App. This component does NOT own the
@@ -10,7 +10,7 @@ import Button from "./Button";
  *
  * This is "lifting state up": the form owns its own *typing* state, but the
  * app-wide project list lives in App, because Card needs it too. A child
- * can't push data to a parent directly — the parent passes down a function,
+ * can't push data to a parent directly - the parent passes down a function,
  * and the child calls it.
  */
 function Form({ onAddProject }) {
@@ -24,7 +24,7 @@ function Form({ onAddProject }) {
   const [errors, setErrors] = useState({});
 
   /**
-   * One handler for every input — this is why each <input> has a `name`
+   * One handler for every input - this is why each <input> has a `name`
    * matching a key in `values`.
    */
   function handleChange(event) {
@@ -87,7 +87,7 @@ function Form({ onAddProject }) {
       <div className="form__field">
         <label htmlFor="title">Title</label>
         {/* CONTROLLED INPUT: `value` comes from state and `onChange` writes
-            back to state. React is the single source of truth — the DOM
+            back to state. React is the single source of truth - the DOM
             never holds a value React doesn't know about. */}
         <input
           id="title"
@@ -127,7 +127,7 @@ function Form({ onAddProject }) {
 
       <div className="form__field">
         <label htmlFor="status">Status</label>
-        {/* A <select> is a controlled input too — same value/onChange pair.
+        {/* A <select> is a controlled input too - same value/onChange pair.
             handleChange needs no changes: it reads name="status". */}
         <select
           id="status"

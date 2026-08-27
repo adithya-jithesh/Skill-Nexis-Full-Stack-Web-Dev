@@ -1,13 +1,13 @@
 import Button from "./Button";
 
 /**
- * Header — site banner with a live project count and a theme toggle.
+ * Header - site banner with a live project count and a theme toggle.
  *
  * Props:
  *   title       heading text
  *   subtitle    supporting line
  *   count       number of projects currently in state (updates live)
- *   theme       "dark" | "light" — owned by App
+ *   theme       "dark" | "light" - owned by App
  *   onToggleTheme  function from App that flips the theme
  *
  * `count` is the interesting one: App keeps the projects array in state,
