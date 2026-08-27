@@ -305,6 +305,16 @@ img { max-width: 100%; display: block; }
   color: var(--accent);
 }
 
+.card__link {
+  margin-top: 1.25rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--accent);
+  align-self: start;      /* don't stretch across the flex column */
+  transition: gap var(--transition);
+}
+.card__link:hover { text-decoration: underline; }
+
 /* ============================================================
    10. SKILLS
    ============================================================ */
