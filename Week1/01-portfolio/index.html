@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <!-- viewport meta is what makes responsive CSS actually work on phones -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Portfolio of Adithya Jithesh - Electronics and Computer Engineering student and full stack developer." />
+  <title>Adithya Jithesh | Portfolio</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===== HEADER + RESPONSIVE NAV ===== -->
+  <header class="site-header">
+    <nav class="nav" aria-label="Main navigation">
+      <a href="#hero" class="nav__logo">Adithya<span>.</span></a>
+
+      <!-- Hamburger button: hidden on desktop, shown on mobile via CSS -->
+      <button class="nav__toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <ul class="nav__list" id="navList">
+        <li><a href="#about">About</a></li>
+        <li><a href="#education">Education</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ===== HERO ===== -->
+    <section id="hero" class="hero">
+      <div class="hero__inner">
+        <p class="hero__greeting">Hi, I'm</p>
+        <h1 class="hero__name">Adithya Jithesh</h1>
+        <h2 class="hero__role">Full Stack Developer &amp; Electronics Engineering Student</h2>
+        <p class="hero__tagline">
+          I build web applications that solve real problems — from AI-powered
+          PC build advisors to sensor-driven automation systems.
+        </p>
+        <div class="hero__actions">
+          <a href="#projects" class="btn btn--primary">View My Work</a>
+          <a href="#contact" class="btn btn--ghost">Get In Touch</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ABOUT ===== -->
+    <section id="about" class="section">
+      <h2 class="section__title">About Me</h2>
+      <div class="about">
+        <p>
+          I'm a Bachelor of Technology student in Electronics and Computer
+          Engineering at Somaiya Vidyavihar School of Engineering, Mumbai.
+          My background spans both hardware and software — I started with a
+          diploma in Electronics and Telecommunication, worked hands-on with
+          industrial PLC automation, and now build full stack web applications.
+        </p>
+        <p>
+          I enjoy working across the whole stack: designing React interfaces,
+          writing FastAPI backends, modelling data in PostgreSQL, and wiring
+          in AI APIs where they genuinely add value. I'm currently deepening
+          my MERN stack skills through a full stack development program.
+        </p>
+        <ul class="about__facts">
+          <li><strong>Location</strong><span>Mumbai, India</span></li>
+          <li><strong>Focus</strong><span>Full Stack Web Development</span></li>
+          <li><strong>Graduating</strong><span>May 2027</span></li>
+          <li><strong>CGPA</strong><span>8.37 / 10.0</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== EDUCATION ===== -->
+    <section id="education" class="section section--alt">
+      <h2 class="section__title">Education &amp; Experience</h2>
+
+      <div class="timeline">
+        <article class="timeline__item">
+          <p class="timeline__date">Jul 2024 &ndash; May 2027</p>
+          <h3 class="timeline__title">B.Tech, Electronics &amp; Computer Engineering</h3>
+          <p class="timeline__org">Somaiya Vidyavihar School of Engineering, Mumbai</p>
+          <p class="timeline__detail">CGPA: 8.37 / 10.0</p>
+        </article>
+
+        <article class="timeline__item">
+          <p class="timeline__date">Aug 2021 &ndash; May 2024</p>
+          <h3 class="timeline__title">Diploma, Electronics &amp; Telecommunication</h3>
+          <p class="timeline__org">Vidyalankar Polytechnic, Mumbai</p>
+          <p class="timeline__detail">Percentage: 77%</p>
+        </article>
+
+        <article class="timeline__item">
+          <p class="timeline__date">Jun 2023 &ndash; Jul 2023</p>
+          <h3 class="timeline__title">Intern &mdash; Industrial Automation</h3>
+          <p class="timeline__org">Aquamax Rehab Equipments, Mumbai</p>
+          <p class="timeline__detail">
+            Programmed and debugged DELTA PLC logic for sensor-driven automation
+            workflows, improving system reliability and reducing equipment downtime.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== PROJECTS ===== -->
+    <section id="projects" class="section">
+      <h2 class="section__title">Projects</h2>
+
+      <div class="projects">
+        <article class="card">
+          <h3 class="card__title">PCEase</h3>
+          <p class="card__period">Aug 2025 &ndash; Dec 2025</p>
+          <p class="card__desc">
+            A full stack PC building platform for Indian buyers that tracks
+            real-time prices across 9 retailers for 100+ components. Includes
+            JWT auth with role-based access, a community forum with threads and
+            voting, an AI Build Advisor powered by the Gemini API, and a
+            CPU&ndash;GPU bottleneck analyzer.
+          </p>
+          <ul class="card__tags">
+            <li>React</li><li>Vite</li><li>FastAPI</li>
+            <li>Supabase</li><li>Gemini API</li><li>JWT</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3 class="card__title">Density-Based Traffic Light System</h3>
+          <p class="card__period">Aug 2023 &ndash; Feb 2024</p>
+          <p class="card__desc">
+            A smart traffic controller that adjusts signal timing in real time
+            based on vehicle density measured by IR sensors. The adaptive timing
+            algorithm cuts average wait time by optimising green-light duration
+            per lane. Validated in MATLAB before hardware deployment.
+          </p>
+          <ul class="card__tags">
+            <li>Python</li><li>Arduino</li><li>MATLAB</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3 class="card__title">N8N Automation Workflow</h3>
+          <p class="card__period">Jan 2026</p>
+          <p class="card__desc">
+            Built at the K. J. Somaiya N8N Automation Hackathon: a real-time
+            low-code workflow integrating multiple APIs to automate a multi-step
+            business process end to end.
+          </p>
+          <ul class="card__tags">
+            <li>N8N</li><li>REST APIs</li><li>Automation</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== SKILLS ===== -->
+    <section id="skills" class="section section--alt">
+      <h2 class="section__title">Technical Skills</h2>
+
+      <div class="skills">
+        <div class="skills__group">
+          <h3>Languages</h3>
+          <ul><li>Python</li><li>JavaScript</li><li>SQL</li><li>HTML</li><li>CSS</li></ul>
+        </div>
+        <div class="skills__group">
+          <h3>Frameworks &amp; Libraries</h3>
+          <ul><li>React</li><li>Vite</li><li>FastAPI</li><li>NumPy</li><li>Pandas</li></ul>
+        </div>
+        <div class="skills__group">
+          <h3>Databases</h3>
+          <ul><li>MySQL</li><li>PostgreSQL</li><li>Supabase</li></ul>
+        </div>
+        <div class="skills__group">
+          <h3>Tools &amp; Deployment</h3>
+          <ul><li>Git</li><li>GitHub</li><li>Docker</li><li>Vercel</li><li>Render</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CONTACT (with JS-validated form) ===== -->
+    <section id="contact" class="section">
+      <h2 class="section__title">Get In Touch</h2>
+
+      <div class="contact">
+        <ul class="contact__links">
+          <li><span>Email</span><a href="mailto:adithyajitesh.17@gmail.com">adithyajitesh.17@gmail.com</a></li>
+          <li><span>Phone</span><a href="tel:+918976008095">+91 89760 08095</a></li>
+          <li><span>LinkedIn</span><a href="https://linkedin.com/in/adithyajithesh" target="_blank" rel="noopener">linkedin.com/in/adithyajithesh</a></li>
+          <li><span>GitHub</span><a href="https://github.com/adithya-jithesh" target="_blank" rel="noopener">github.com/adithya-jithesh</a></li>
+        </ul>
+
+        <!-- novalidate turns OFF the browser's built-in validation so our JS runs -->
+        <form class="form" id="contactForm" novalidate>
+          <div class="form__field">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Your name" />
+            <small class="form__error" id="nameError"></small>
+          </div>
+
+          <div class="form__field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" />
+            <small class="form__error" id="emailError"></small>
+          </div>
+
+          <div class="form__field">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="5" placeholder="What would you like to talk about?"></textarea>
+            <small class="form__error" id="messageError"></small>
+          </div>
+
+          <button type="submit" class="btn btn--primary">Send Message</button>
+          <p class="form__success" id="formSuccess" hidden>Thanks! Your message has been validated and sent.</p>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 Adithya Jithesh. Built with HTML &amp; CSS.</p>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
