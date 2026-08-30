@@ -3,130 +3,192 @@ import Header from "./components/Header";
 import Card from "./components/Card";
 import Form from "./components/Form";
 import Footer from "./components/Footer";
-import Button from "./components/Button";
 
-/** Starting data. In a real app this would come from an API. */
-const INITIAL_PROJECTS = [
+// The products the shop starts with.
+const initialProducts = [
   {
     id: 1,
-    title: "Multi-Modal Deepfake Detection",
-    description:
-      "Detects lip-sync deepfakes by exploiting disagreement between the visual and audio streams. Five parallel streams fused by an MLP.",
-    tags: ["Python", "PyTorch", "DINOv2"],
-    status: "In progress",
+    name: "Amul Gold Milk",
+    description: "Full cream milk, 6% fat.",
+    category: "Dairy",
+    price: 68,
+    unit: "litre",
+    stock: 24,
   },
   {
     id: 2,
-    title: "PCEase",
-    description:
-      "Full stack PC building platform tracking real-time component prices across 9 Indian retailers, with an AI build advisor.",
-    tags: ["React", "FastAPI", "Supabase"],
+    name: "Bananas",
+    description: "Fresh bananas from the local market.",
+    category: "Fruits",
+    price: 49,
+    unit: "dozen",
+    stock: 12,
   },
   {
     id: 3,
-    title: "SilverGuard",
-    description:
-      "Mobile app protecting elderly users from digital arrest scams using a coercion interlock and real-time keyword detection.",
-    tags: ["Flutter", "Kotlin", "N8N"],
+    name: "Brown Bread",
+    description: "Whole wheat bread, baked today.",
+    category: "Bakery",
+    price: 45,
+    unit: "piece",
+    stock: 4,
+  },
+  {
+    id: 4,
+    name: "Basmati Rice",
+    description: "Long grain basmati rice.",
+    category: "Grocery",
+    price: 520,
+    unit: "kg",
+    stock: 15,
+  },
+  {
+    id: 5,
+    name: "Tomatoes",
+    description: "Sold loose by weight.",
+    category: "Vegetables",
+    price: 32,
+    unit: "kg",
+    stock: 0,
+  },
+  {
+    id: 6,
+    name: "Potato Chips",
+    description: "Salted chips, 52 g pack.",
+    category: "Snacks",
+    price: 20,
+    unit: "pack",
+    stock: 40,
   },
 ];
 
-const FOOTER_LINKS = [
+const categories = ["Dairy", "Fruits", "Vegetables", "Bakery", "Grocery", "Snacks"];
+
+const footerLinks = [
   { label: "GitHub", href: "https://github.com/adithya-jithesh" },
   { label: "LinkedIn", href: "https://linkedin.com/in/adithyajithesh" },
 ];
 
 function App() {
-  /* ── STATE ──────────────────────────────────────────────────────────
-     Three independent pieces of state. Each useState call returns a pair:
-     the current value, and a function to replace it. Calling the setter
-     tells React to re-render this component and everything below it.  */
-  const [projects, setProjects] = useState(INITIAL_PROJECTS);
-  const [theme, setTheme] = useState("dark");
-  const [query, setQuery] = useState("");
+  // State. Each useState gives us a value and a function to change it.
+  // cart looks like { 1: 2 } which means 2 units of product number 1.
+  const [products, setProducts] = useState(initialProducts);
+  const [cart, setCart] = useState({});
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("All");
 
-  /* ── DERIVED VALUE ──────────────────────────────────────────────────
-     NOT state. It's computed from projects + query on every render, so it
-     can never disagree with them. Rule: if you can calculate it from
-     existing state, don't store it in state.                            */
-  const visibleProjects = projects.filter((project) => {
-    const haystack = `${project.title} ${project.description} ${project.tags.join(" ")}`;
-    return haystack.toLowerCase().includes(query.trim().toLowerCase());
+  // These are calculated on every render, so they are not kept in state.
+  const shownProducts = products.filter((product) => {
+    const matchesSearch = product.name.toLowerCase().includes(search.toLowerCase());
+    const matchesFilter = filter === "All" || product.category === filter;
+    return matchesSearch && matchesFilter;
   });
 
-  function handleAddProject(newProject) {
-    setProjects((previous) => [
-      // Date.now() is a quick unique id. A real app would use a UUID or a
-      // database id - never the array index, which changes on delete.
-      { ...newProject, id: Date.now() },
-      ...previous, // spread the old items after the new one → newest first
-    ]);
+  let itemCount = 0;
+  let cartTotal = 0;
+
+  products.forEach((product) => {
+    const quantity = cart[product.id];
+    if (quantity) {
+      itemCount = itemCount + quantity;
+      cartTotal = cartTotal + product.price * quantity;
+    }
+  });
+
+  function handleAddProduct(newProduct) {
+    // build a new array instead of changing the old one
+    setProducts([{ ...newProduct, id: Date.now() }, ...products]);
   }
 
-  function handleRemoveProject(id) {
-    // filter returns a NEW array. We never mutate the existing one.
-    setProjects((previous) => previous.filter((project) => project.id !== id));
+  function handleAddToCart(id) {
+    // take one unit off the shelf
+    setProducts(
+      products.map((product) => {
+        if (product.id === id) {
+          return { ...product, stock: product.stock - 1 };
+        }
+        return product;
+      })
+    );
+
+    // and put it in the cart
+    const quantity = cart[id] || 0;
+    setCart({ ...cart, [id]: quantity + 1 });
   }
 
-  function handleToggleTheme() {
-    setTheme((previous) => (previous === "dark" ? "light" : "dark"));
+  function handleRemoveProduct(id) {
+    setProducts(products.filter((product) => product.id !== id));
+
+    // also take it out of the cart
+    const newCart = { ...cart };
+    delete newCart[id];
+    setCart(newCart);
+  }
+
+  function handleClearCart() {
+    // put the units back on the shelf
+    setProducts(
+      products.map((product) => {
+        if (cart[product.id]) {
+          return { ...product, stock: product.stock + cart[product.id] };
+        }
+        return product;
+      })
+    );
+
+    setCart({});
   }
 
   return (
-    // The theme class lives on the outermost element; CSS variables inside
-    // .app--light override the dark defaults for everything beneath it.
-    <div className={`app app--${theme}`}>
+    <div className="app">
       <Header
-        title="React Components Practice"
-        subtitle="Week 1 - Header, Footer, Card, Button and Form built as reusable components."
-        count={projects.length}
-        theme={theme}
-        onToggleTheme={handleToggleTheme}
+        shopName="Fresh Mart Supermarket"
+        itemCount={itemCount}
+        cartTotal={cartTotal}
+        onClearCart={handleClearCart}
       />
 
-      <main className="main">
-        <section className="panel">
-          <Form onAddProject={handleAddProject} />
-        </section>
+      <Form categories={categories} onAddProduct={handleAddProduct} />
 
-        <section className="panel">
-          <div className="toolbar">
-            <input
-              className="toolbar__search"
-              type="search"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search projects…"
-            />
-            <Button variant="ghost" onClick={() => setProjects(INITIAL_PROJECTS)}>
-              Reset
-            </Button>
-          </div>
+      <div className="toolbar">
+        <input
+          type="text"
+          placeholder="Search products"
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+        />
 
-          {/* Conditional rendering with a ternary: empty state vs the grid. */}
-          {visibleProjects.length === 0 ? (
-            <p className="empty">
-              No projects match “{query}”. Try a different search.
-            </p>
-          ) : (
-            <div className="grid">
-              {visibleProjects.map((project) => (
-                <Card
-                  key={project.id}
-                  id={project.id}
-                  title={project.title}
-                  description={project.description}
-                  tags={project.tags}
-                  status={project.status}
-                  onRemove={handleRemoveProject}
-                />
-              ))}
-            </div>
-          )}
-        </section>
-      </main>
+        <select value={filter} onChange={(event) => setFilter(event.target.value)}>
+          <option value="All">All categories</option>
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+      </div>
 
-      <Footer name="Adithya Jithesh" links={FOOTER_LINKS} />
+      <div className="product-list">
+        {/* if nothing matches, show a message instead of the list */}
+        {shownProducts.length === 0 && <p>No products found.</p>}
+
+        {shownProducts.map((product) => (
+          <Card
+            key={product.id}
+            id={product.id}
+            name={product.name}
+            description={product.description}
+            category={product.category}
+            price={product.price}
+            unit={product.unit}
+            stock={product.stock}
+            onAddToCart={handleAddToCart}
+            onRemove={handleRemoveProduct}
+          />
+        ))}
+      </div>
+
+      <Footer name="Adithya Jithesh" links={footerLinks} />
     </div>
   );
 }

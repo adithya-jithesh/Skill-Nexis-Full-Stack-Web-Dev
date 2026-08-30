@@ -31,19 +31,23 @@ Responsive portfolio built with plain HTML5, CSS3 and vanilla JavaScript — no 
 
 ### 2. React Components Practice
 Five reusable components built with React 19 and Vite, wired together into a
-working project manager.
+small supermarket app: browse products, search and filter them, add stock, and
+add items to a cart.
 
 | Component | Demonstrates |
 |-----------|--------------|
-| `Button`  | Props with defaults, `children`, variant modifier classes |
-| `Card`    | Props, list rendering with `.map()` and `key`, conditional rendering |
-| `Header`  | Derived props (live project count), controlled theme switching |
+| `Button`  | Props with defaults, `children`, a `disabled` prop |
+| `Card`    | Props, conditional rendering, a value calculated from a prop |
+| `Header`  | Derived props (live cart count and total), conditional button |
 | `Form`    | `useState`, controlled inputs, validation, lifting state up |
-| `Footer`  | Pure presentational component, rendering an array of links |
+| `Footer`  | Pure presentational component, rendering an array with `.map()` |
 
-State lives in `App.jsx` and flows down through props: the form adds projects,
-cards remove them, the search box filters them, and the header count updates
-automatically.
+State lives in `App.jsx` and flows down through props: the form adds products,
+cards sell and remove them, the search box and category dropdown filter them,
+and the header cart updates automatically.
+
+See [`FLOW.md`](FLOW.md) for how the pieces fit together and
+[`DECISIONS.md`](DECISIONS.md) for why each choice was made.
 
 **Run it:**
 ```bash

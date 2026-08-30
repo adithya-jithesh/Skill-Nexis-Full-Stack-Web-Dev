@@ -1,148 +1,144 @@
 import { useState } from "react";
 import Button from "./Button";
 
-/**
- * Form - adds a new project card.
- *
- * Props:
- *   onAddProject   function from App. This component does NOT own the
- *                  projects list; it just hands a finished object upward.
- *
- * This is "lifting state up": the form owns its own *typing* state, but the
- * app-wide project list lives in App, because Card needs it too. A child
- * can't push data to a parent directly - the parent passes down a function,
- * and the child calls it.
- */
-function Form({ onAddProject }) {
-  // One state object for all three fields, instead of three useState calls.
+// Form - adds a new product to the shop.
+// Props: categories (array for the dropdown), onAddProduct (function from App).
+// The form keeps the typed values in its own state and sends the finished
+// product up to App, because App owns the product list.
+
+function Form({ categories, onAddProduct }) {
   const [values, setValues] = useState({
-    title: "",
+    name: "",
     description: "",
-    tags: "",
-    status: "",
+    category: "Dairy",
+    price: "",
+    unit: "pack",
+    stock: "",
   });
+
   const [errors, setErrors] = useState({});
 
-  /**
-   * One handler for every input - this is why each <input> has a `name`
-   * matching a key in `values`.
-   */
+  // one handler for every input - it uses the input's name attribute
   function handleChange(event) {
-    const { name, value } = event.target;
+    const name = event.target.name;
+    const value = event.target.value;
 
-    // NEVER mutate state directly (values[name] = value won't re-render).
-    // Build a NEW object with the spread operator so React sees a change.
-    setValues((previous) => ({ ...previous, [name]: value }));
-
-    // clear this field's error as soon as the user starts fixing it
-    if (errors[name]) {
-      setErrors((previous) => ({ ...previous, [name]: "" }));
-    }
-  }
-
-  function validate() {
-    const nextErrors = {};
-
-    if (!values.title.trim()) {
-      nextErrors.title = "Title is required.";
-    } else if (values.title.trim().length < 3) {
-      nextErrors.title = "Title must be at least 3 characters.";
-    }
-
-    if (!values.description.trim()) {
-      nextErrors.description = "Description is required.";
-    } else if (values.description.trim().length < 15) {
-      nextErrors.description = "Description must be at least 15 characters.";
-    }
-
-    setErrors(nextErrors);
-    return Object.keys(nextErrors).length === 0;
+    setValues({ ...values, [name]: value });
   }
 
   function handleSubmit(event) {
-    event.preventDefault(); // stop the browser reloading the page
+    event.preventDefault(); // stop the page from reloading
 
-    if (!validate()) return;
+    const newErrors = {};
 
-    onAddProject({
-      title: values.title.trim(),
-      description: values.description.trim(),
-      // empty string = no badge, because "" is falsy in Card's {status && …}
-      status: values.status,
-      // "react, vite, css" → ["react", "vite", "css"], empties removed
-      tags: values.tags
-        .split(",")
-        .map((tag) => tag.trim())
-        .filter(Boolean),
+    if (values.name.trim() === "") {
+      newErrors.name = "Please enter a product name.";
+    }
+
+    if (values.price === "" || Number(values.price) <= 0) {
+      newErrors.price = "Price must be more than 0.";
+    }
+
+    if (values.stock === "" || Number(values.stock) < 0) {
+      newErrors.stock = "Stock cannot be empty or negative.";
+    }
+
+    setErrors(newErrors);
+
+    // stop here if there is any error
+    if (Object.keys(newErrors).length > 0) {
+      return;
+    }
+
+    onAddProduct({
+      name: values.name,
+      description: values.description,
+      category: values.category,
+      unit: values.unit,
+      price: Number(values.price),
+      stock: Number(values.stock),
     });
 
-    // reset the form back to empty
-    setValues({ title: "", description: "", tags: "", status: "" });
+    // clear the form
+    setValues({
+      name: "",
+      description: "",
+      category: values.category,
+      price: "",
+      unit: "pack",
+      stock: "",
+    });
+    setErrors({});
   }
 
   return (
     <form className="form" onSubmit={handleSubmit}>
-      <h2 className="form__heading">Add a project</h2>
+      <h2>Add a new product</h2>
 
-      <div className="form__field">
-        <label htmlFor="title">Title</label>
-        {/* CONTROLLED INPUT: `value` comes from state and `onChange` writes
-            back to state. React is the single source of truth - the DOM
-            never holds a value React doesn't know about. */}
-        <input
-          id="title"
-          name="title"
-          value={values.title}
-          onChange={handleChange}
-          placeholder="Project name"
-        />
-        {errors.title && <small className="form__error">{errors.title}</small>}
-      </div>
+      <label htmlFor="name">Product name</label>
+      {/* controlled input: the value comes from state and onChange updates it */}
+      <input
+        id="name"
+        name="name"
+        value={values.name}
+        onChange={handleChange}
+      />
+      {errors.name && <p className="error">{errors.name}</p>}
 
-      <div className="form__field">
-        <label htmlFor="description">Description</label>
-        <textarea
-          id="description"
-          name="description"
-          rows="3"
-          value={values.description}
-          onChange={handleChange}
-          placeholder="What does it do?"
-        />
-        {errors.description && (
-          <small className="form__error">{errors.description}</small>
-        )}
-      </div>
+      <label htmlFor="description">Description</label>
+      <input
+        id="description"
+        name="description"
+        value={values.description}
+        onChange={handleChange}
+      />
 
-      <div className="form__field">
-        <label htmlFor="tags">Tags</label>
-        <input
-          id="tags"
-          name="tags"
-          value={values.tags}
-          onChange={handleChange}
-          placeholder="React, Vite, CSS (comma separated)"
-        />
-      </div>
+      <label htmlFor="category">Category</label>
+      <select
+        id="category"
+        name="category"
+        value={values.category}
+        onChange={handleChange}
+      >
+        {categories.map((category) => (
+          <option key={category} value={category}>
+            {category}
+          </option>
+        ))}
+      </select>
 
-      <div className="form__field">
-        <label htmlFor="status">Status</label>
-        {/* A <select> is a controlled input too - same value/onChange pair.
-            handleChange needs no changes: it reads name="status". */}
-        <select
-          id="status"
-          name="status"
-          value={values.status}
-          onChange={handleChange}
-        >
-          <option value="">No badge</option>
-          <option value="In progress">In progress</option>
-          <option value="Shipped">Shipped</option>
-          <option value="Archived">Archived</option>
-        </select>
-      </div>
+      <label htmlFor="price">Price (Rs.)</label>
+      <input
+        id="price"
+        name="price"
+        type="number"
+        value={values.price}
+        onChange={handleChange}
+      />
+      {errors.price && <p className="error">{errors.price}</p>}
 
-      <Button type="submit">Add Project</Button>
+      <label htmlFor="unit">Sold per</label>
+      <select id="unit" name="unit" value={values.unit} onChange={handleChange}>
+        <option value="kg">kg</option>
+        <option value="litre">litre</option>
+        <option value="pack">pack</option>
+        <option value="dozen">dozen</option>
+        <option value="piece">piece</option>
+      </select>
+
+      <label htmlFor="stock">Stock</label>
+      <input
+        id="stock"
+        name="stock"
+        type="number"
+        value={values.stock}
+        onChange={handleChange}
+      />
+      {errors.stock && <p className="error">{errors.stock}</p>}
+
+      <Button type="submit" color="btn-primary">
+        Add product
+      </Button>
     </form>
   );
 }

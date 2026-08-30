@@ -1,49 +1,40 @@
 import Button from "./Button";
 
-/**
- * Card - displays one project. Rendered once per item in the projects array.
- *
- * Props:
- *   id           unique identifier, passed back up when removing
- *   title        project name
- *   description  project summary
- *   tags         ARRAY of strings → rendered with .map()
- *   status       optional pill text, e.g. "In progress"
- *   onRemove     function passed DOWN from App; Card calls it on click
- *
- * This component holds no state of its own. Everything it shows comes from
- * props, and the only thing it does is call onRemove. That makes it a
- * "presentational" component - easy to reason about and easy to reuse.
- */
-function Card({ id, title, description, tags = [], status, onRemove }) {
+// Card - shows one product. It has no state of its own, it only
+// displays the props it is given and calls the two functions from App.
+// Props: id, name, description, category, price, unit, stock,
+//        onAddToCart, onRemove.
+
+function Card({ id, name, description, category, price, unit, stock, onAddToCart, onRemove }) {
+  // work out the stock message from the stock number
+  let stockText = "In stock: " + stock;
+  let stockClass = "stock-ok";
+
+  if (stock === 0) {
+    stockText = "Out of stock";
+    stockClass = "stock-out";
+  } else if (stock <= 5) {
+    stockText = "Only " + stock + " left";
+    stockClass = "stock-low";
+  }
+
   return (
-    <article className="card">
-      <h3 className="card__title">
-        {title}
-        {/* Conditional rendering: `&&` renders the right side ONLY if the
-            left side is truthy. No status prop → nothing renders. */}
-        {status && <span className="card__status">{status}</span>}
-      </h3>
+    <div className="card">
+      <h3>{name}</h3>
+      <p>{description}</p>
+      <p className="price">Rs. {price} / {unit}</p>
+      <p>Category: {category}</p>
+      <p className={stockClass}>{stockText}</p>
 
-      <p className="card__desc">{description}</p>
+      {/* arrow function so the click calls the function, not the render */}
+      <Button color="btn-primary" onClick={() => onAddToCart(id)} disabled={stock === 0}>
+        Add to cart
+      </Button>
 
-      <ul className="card__tags">
-        {/* Rendering a list: .map() turns an array of strings into an array
-            of JSX elements. `key` must be unique among siblings - React uses
-            it to tell items apart when the list changes. */}
-        {tags.map((tag) => (
-          <li key={tag}>{tag}</li>
-        ))}
-      </ul>
-
-      <div className="card__actions">
-        {/* An arrow function so onRemove runs on CLICK, not during render.
-            Writing onClick={onRemove(id)} would call it immediately. */}
-        <Button variant="danger" onClick={() => onRemove(id)}>
-          Remove
-        </Button>
-      </div>
-    </article>
+      <Button color="btn-danger" onClick={() => onRemove(id)}>
+        Remove
+      </Button>
+    </div>
   );
 }
 

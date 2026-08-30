@@ -1,31 +1,22 @@
-/**
- * Footer - the simplest component here: props in, markup out, no state.
- *
- * Props:
- *   name   whose site this is
- *   links  ARRAY of { label, href } objects → rendered with .map()
- *
- * The year isn't a prop because it's derivable - computing it here means
- * one less thing for the parent to pass and remember to update.
- */
-function Footer({ name, links = [] }) {
+// Footer - simple component, props in and markup out, no state.
+// Props: name, links (array of objects with label and href).
+
+function Footer({ name, links }) {
   const year = new Date().getFullYear();
 
   return (
     <footer className="footer">
       <p>
-        &copy; {year} {name} &middot; Week 1 - React Components Practice
+        {name} - {year} - SkillNexis Week 1 assignment
       </p>
 
-      <ul className="footer__links">
+      <p>
         {links.map((link) => (
-          <li key={link.href}>
-            <a href={link.href} target="_blank" rel="noopener noreferrer">
-              {link.label}
-            </a>
-          </li>
+          <a key={link.href} href={link.href} target="_blank" rel="noreferrer">
+            {link.label}
+          </a>
         ))}
-      </ul>
+      </p>
     </footer>
   );
 }
