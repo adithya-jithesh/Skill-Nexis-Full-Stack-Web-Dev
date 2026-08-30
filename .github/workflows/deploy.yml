@@ -43,6 +43,7 @@ jobs:
         run: |
           mkdir -p _site
           cp site/index.html _site/index.html
+          cp site/favicon.svg _site/favicon.svg
           cp -r Week1/01-portfolio _site/portfolio
 
       # The two React apps have to be built. --base tells Vite the app will

@@ -1,46 +1,61 @@
 /* Styles for the blog. Plain CSS, no framework. */
 
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: Arial, Helvetica, sans-serif;
-  background-color: #f2f2f2;
-  color: #222222;
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  background-color: #f5f6f7;
+  color: #333333;
   margin: 0;
   padding: 0;
+}
+
+h1, h2, h3 {
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.3;
 }
 
 .app {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 10px;
+  padding: 20px 15px 10px;
 }
 
 /* Header */
 .header {
   background-color: #1f4e79;
   color: #ffffff;
-  padding: 15px;
-  border-radius: 4px;
+  padding: 20px;
+  border-radius: 5px;
 }
 
 .header h1 {
   margin: 0;
-  font-size: 26px;
+  font-size: 28px;
 }
 
 .header p {
-  margin: 5px 0 0 0;
-  font-size: 14px;
+  margin: 6px 0 0 0;
+  font-size: 13px;
+  color: #cfdded;
 }
 
 .header__count {
-  font-size: 13px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #3a6a95;
+  font-size: 12px;
 }
 
 /* Two columns: filters on the left, posts on the right. */
 .layout {
   display: flex;
-  gap: 15px;
-  margin-top: 15px;
+  gap: 20px;
+  margin-top: 20px;
 }
 
 .left-column {
@@ -59,55 +74,64 @@ body {
 
   .left-column {
     width: auto;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
   }
 }
 
 /* Sidebar */
 .sidebar {
   background-color: #ffffff;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  padding: 15px;
+  border: 1px solid #d9dfe5;
+  border-radius: 5px;
+  padding: 18px;
 }
 
 .sidebar h2 {
-  font-size: 15px;
-  margin: 0 0 6px 0;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #777777;
+  margin: 0 0 8px 0;
 }
 
 .sidebar input {
   width: 100%;
-  padding: 6px;
-  border: 1px solid #cccccc;
-  border-radius: 3px;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
-  box-sizing: border-box;
-  margin-bottom: 15px;
+  padding: 8px;
+  border: 1px solid #ccd4dc;
+  border-radius: 4px;
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 13px;
+  color: #333333;
+  margin-bottom: 20px;
+}
+
+.sidebar input:focus {
+  outline: none;
+  border-color: #1f4e79;
 }
 
 .category-list {
   list-style: none;
-  margin: 0 0 10px 0;
+  margin: 0 0 14px 0;
   padding: 0;
 }
 
 .category-btn {
   width: 100%;
   text-align: left;
-  padding: 5px 8px;
-  margin-bottom: 3px;
-  border: 1px solid #ffffff;
-  border-radius: 3px;
-  background-color: #ffffff;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
+  padding: 7px 10px;
+  margin-bottom: 2px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background-color: transparent;
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 13px;
+  color: #444444;
   cursor: pointer;
 }
 
 .category-btn:hover {
-  background-color: #eeeeee;
+  background-color: #eef1f4;
 }
 
 .category-btn-active {
@@ -117,7 +141,7 @@ body {
 }
 
 /* keep the selected button dark when the mouse is over it, otherwise the
-   hover rule above turns it white and the white text disappears */
+   hover rule above turns it light and the white text disappears */
 .category-btn-active:hover {
   background-color: #1f4e79;
 }
@@ -125,19 +149,19 @@ body {
 /* Posts */
 .post {
   background-color: #ffffff;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  padding: 15px;
-  margin-bottom: 12px;
+  border: 1px solid #d9dfe5;
+  border-radius: 5px;
+  padding: 20px 22px;
+  margin-bottom: 14px;
 }
 
 .post h3 {
-  margin: 6px 0 4px 0;
-  font-size: 18px;
+  margin: 8px 0 4px 0;
+  font-size: 21px;
 }
 
 .post p {
-  margin: 6px 0;
+  margin: 8px 0;
   font-size: 14px;
 }
 
@@ -145,65 +169,78 @@ body {
   display: inline-block;
   padding: 2px 8px;
   border-radius: 3px;
-  background-color: #e3ecf4;
+  background-color: #eaf0f6;
   color: #1f4e79;
-  font-size: 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .post__meta {
-  color: #666666;
-  font-size: 13px;
+  color: #888888;
+  font-size: 12px;
 }
 
+/* The full post reads better in a serif, and slightly wider spacing. */
 .post__content {
-  border-left: 3px solid #cccccc;
-  padding-left: 10px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 15px;
+  line-height: 1.8;
   color: #444444;
+  border-left: 3px solid #d7e1ea;
+  padding-left: 14px;
+  margin-top: 12px;
 }
 
 .post__tags {
   list-style: none;
-  margin: 10px 0 0 0;
+  margin: 12px 0 0 0;
   padding: 0;
 }
 
 .post__tags li {
   display: inline-block;
-  margin-right: 8px;
-  color: #1f4e79;
-  font-size: 13px;
+  margin-right: 6px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  background-color: #eaeef2;
+  color: #5a6570;
+  font-size: 12px;
 }
 
 .no-results {
   background-color: #ffffff;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  padding: 15px;
+  border: 1px solid #d9dfe5;
+  border-radius: 5px;
+  padding: 20px;
   font-size: 14px;
+  color: #666666;
 }
 
 /* Buttons */
 .btn {
-  padding: 6px 12px;
-  margin-top: 8px;
-  border: 1px solid #cccccc;
-  border-radius: 3px;
-  background-color: #eeeeee;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
+  padding: 7px 14px;
+  margin-top: 12px;
+  border: 1px solid #c4ccd4;
+  border-radius: 4px;
+  background-color: #eef1f4;
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 13px;
+  color: #444444;
   cursor: pointer;
 }
 
 .btn:hover {
-  background-color: #dddddd;
+  background-color: #e2e7ec;
 }
 
 /* Footer */
 .footer {
-  margin-top: 20px;
-  padding: 12px;
-  border-top: 1px solid #cccccc;
-  font-size: 13px;
+  margin-top: 25px;
+  padding: 16px;
+  border-top: 1px solid #d9dfe5;
+  font-size: 12px;
+  color: #777777;
   text-align: center;
 }
 
