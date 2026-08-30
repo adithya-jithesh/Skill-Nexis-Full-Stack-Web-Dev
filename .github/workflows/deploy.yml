@@ -30,11 +30,12 @@ jobs:
         with:
           node-version: 22
 
+      # Reads the repo's Pages settings and works out the base path.
+      # Pages must already be switched on, with the source set to
+      # GitHub Actions (Settings -> Pages).
       - name: Set up Pages
         id: pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       # The landing page and the portfolio are plain HTML, so they are
       # just copied across. Nothing to build.
