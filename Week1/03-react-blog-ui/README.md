@@ -1,16 +1,35 @@
-# React + Vite
+# React Blog UI
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+SkillNexis Week 1, assignment 3 (mini project). A blog that renders post cards
+from a local JSON file, with search and category filtering.
 
-Currently, two official plugins are available:
+The ten posts live in `src/data/posts.json` and are pulled in with a plain
+`import`, so there is no fetch and nothing to wait for. Search matches the
+title, summary and tags, and works together with the category buttons.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+`search` and `category` live in `src/App.jsx` because the sidebar sets them and
+the post list reads them. Whether a post is expanded lives inside that
+`PostCard`, since it affects nothing else.
 
-## React Compiler
+## Run it
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+npm run dev
+```
 
-## Expanding the Oxlint configuration
+## Files
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+```
+src/
+├── App.jsx              search and category state, filters the posts
+├── index.css            all the styling
+├── main.jsx             renders <App /> into index.html
+├── data/posts.json      the posts
+└── components/
+    ├── Header.jsx       blog title and the post count
+    ├── Sidebar.jsx      search box and category buttons
+    ├── PostCard.jsx     one post, expands to show the full text
+    ├── Footer.jsx       name, year and links
+    └── Button.jsx       shared button
+```

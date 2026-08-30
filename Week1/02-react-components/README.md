@@ -1,16 +1,33 @@
-# React + Vite
+# React Components Practice
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+SkillNexis Week 1, assignment 2. A small supermarket app built from five
+reusable components: `Header`, `Footer`, `Card`, `Button` and `Form`.
 
-Currently, two official plugins are available:
+Add products through the form, search and filter the shelf, and add items to a
+cart. Selling an item takes it off the shelf, and emptying the cart puts it
+back.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+All shared state lives in `src/App.jsx` and is passed down as props. The
+components send changes back up by calling functions the parent gave them.
 
-## React Compiler
+## Run it
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+npm run dev
+```
 
-## Expanding the Oxlint configuration
+## Files
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+```
+src/
+├── App.jsx              products, cart, search and filter state
+├── index.css            all the styling
+├── main.jsx             renders <App /> into index.html
+└── components/
+    ├── Header.jsx       shop name and the cart summary
+    ├── Form.jsx         add a new product, with validation
+    ├── Card.jsx         one product
+    ├── Footer.jsx       name, year and links
+    └── Button.jsx       shared button
+```
