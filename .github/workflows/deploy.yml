@@ -37,14 +37,14 @@ jobs:
         id: pages
         uses: actions/configure-pages@v5
 
-      # The landing page and the portfolio are plain HTML, so they are
-      # just copied across. Nothing to build.
-      - name: Copy the landing page and the portfolio
+      # The portfolio is plain HTML, so it is just copied across. Nothing
+      # to build. It goes to /portfolio and to the root of the site, so the
+      # bare address opens the portfolio rather than a "not found" page.
+      - name: Copy the portfolio
         run: |
           mkdir -p _site
-          cp site/index.html _site/index.html
-          cp site/favicon.svg _site/favicon.svg
           cp -r Week1/01-portfolio _site/portfolio
+          cp -r Week1/01-portfolio/. _site/
 
       # The two React apps have to be built. --base tells Vite the app will
       # be served from a sub folder, so it writes the right asset paths.
