@@ -5,6 +5,20 @@ Assignment submissions for the SkillNexis Full Stack Web Development (MERN) virt
 **Adithya Jithesh** - B.Tech Electronics & Computer Engineering, Somaiya Vidyavihar School of Engineering
 [GitHub](https://github.com/adithya-jithesh) · [LinkedIn](https://linkedin.com/in/adithyajithesh)
 
+### 🔗 Live site: https://adithya-jithesh.github.io/Skill-Nexis-Full-Stack-Web-Dev/
+
+All three assignments are deployed and can be opened in a browser:
+
+| Assignment | Live |
+|------------|------|
+| 1. Personal Portfolio | [/portfolio](https://adithya-jithesh.github.io/Skill-Nexis-Full-Stack-Web-Dev/portfolio/) |
+| 2. React Components Practice | [/shop](https://adithya-jithesh.github.io/Skill-Nexis-Full-Stack-Web-Dev/shop/) |
+| 3. Mini Project - Blog UI | [/blog](https://adithya-jithesh.github.io/Skill-Nexis-Full-Stack-Web-Dev/blog/) |
+
+Deployed by GitHub Pages on every push to `main`. The portfolio is copied
+across as-is; the two React apps are built with Vite by the workflow in
+[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
+
 ---
 
 ## Week 1 - Frontend Fundamentals (HTML, CSS, React Basics)
