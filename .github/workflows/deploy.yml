@@ -1,0 +1,77 @@
+name: Deploy to GitHub Pages
+
+# Runs on every push to main, and can also be started by hand from the
+# Actions tab.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Permissions the deploy step needs.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# If two pushes happen close together, let the newer one win.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Set up Pages
+        id: pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      # The landing page and the portfolio are plain HTML, so they are
+      # just copied across. Nothing to build.
+      - name: Copy the landing page and the portfolio
+        run: |
+          mkdir -p _site
+          cp site/index.html _site/index.html
+          cp -r Week1/01-portfolio _site/portfolio
+
+      # The two React apps have to be built. --base tells Vite the app will
+      # be served from a sub folder, so it writes the right asset paths.
+      - name: Build the supermarket app
+        working-directory: Week1/02-react-components
+        run: |
+          npm ci
+          npm run build -- --base=${{ steps.pages.outputs.base_path }}/shop/
+          cp -r dist ../../_site/shop
+
+      - name: Build the blog app
+        working-directory: Week1/03-react-blog-ui
+        run: |
+          npm ci
+          npm run build -- --base=${{ steps.pages.outputs.base_path }}/blog/
+          cp -r dist ../../_site/blog
+
+      - name: Upload the finished site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish
+        id: deployment
+        uses: actions/deploy-pages@v4
