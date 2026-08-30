@@ -7,13 +7,13 @@ Assignment submissions for the SkillNexis Full Stack Web Development (MERN) virt
 
 ### Live sites
 
-- **Portfolio** - https://adithya-jithesh.github.io/Skill-Nexis-Full-Stack-Web-Dev/portfolio/
-- **React Components Practice** - https://adithya-jithesh.github.io/Skill-Nexis-Full-Stack-Web-Dev/shop/
-- **Mini Project, Blog UI** - https://adithya-jithesh.github.io/Skill-Nexis-Full-Stack-Web-Dev/blog/
+| # | Assignment | Live link |
+|---|------------|-----------|
+| 1 | Personal Portfolio | https://adithya-jithesh.github.io/Skill-Nexis-Full-Stack-Web-Dev/portfolio/ |
+| 2 | React Components Practice | https://adithya-jithesh.github.io/Skill-Nexis-Full-Stack-Web-Dev/shop/ |
+| 3 | Mini Project - Blog UI | https://adithya-jithesh.github.io/Skill-Nexis-Full-Stack-Web-Dev/blog/ |
 
-Deployed by GitHub Pages on every push to `main`. The portfolio is copied
-across as-is; the two React apps are built with Vite by the workflow in
-[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
+Deployed automatically with GitHub Pages on every push to `main`.
 
 ---
 
