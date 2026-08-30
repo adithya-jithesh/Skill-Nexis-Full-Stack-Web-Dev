@@ -148,44 +148,51 @@ function App() {
         onClearCart={handleClearCart}
       />
 
-      <Form categories={categories} onAddProduct={handleAddProduct} />
+      {/* two columns: the form on the left, the products on the right */}
+      <div className="layout">
+        <div className="left-column">
+          <Form categories={categories} onAddProduct={handleAddProduct} />
+        </div>
 
-      <div className="toolbar">
-        <input
-          type="text"
-          placeholder="Search products"
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-        />
+        <div className="right-column">
+          <div className="toolbar">
+            <input
+              type="text"
+              placeholder="Search products"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+            />
 
-        <select value={filter} onChange={(event) => setFilter(event.target.value)}>
-          <option value="All">All categories</option>
-          {categories.map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
-      </div>
+            <select value={filter} onChange={(event) => setFilter(event.target.value)}>
+              <option value="All">All categories</option>
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+          </div>
 
-      <div className="product-list">
-        {/* if nothing matches, show a message instead of the list */}
-        {shownProducts.length === 0 && <p>No products found.</p>}
+          <div className="product-list">
+            {/* if nothing matches, show a message instead of the list */}
+            {shownProducts.length === 0 && <p>No products found.</p>}
 
-        {shownProducts.map((product) => (
-          <Card
-            key={product.id}
-            id={product.id}
-            name={product.name}
-            description={product.description}
-            category={product.category}
-            price={product.price}
-            unit={product.unit}
-            stock={product.stock}
-            onAddToCart={handleAddToCart}
-            onRemove={handleRemoveProduct}
-          />
-        ))}
+            {shownProducts.map((product) => (
+              <Card
+                key={product.id}
+                id={product.id}
+                name={product.name}
+                description={product.description}
+                category={product.category}
+                price={product.price}
+                unit={product.unit}
+                stock={product.stock}
+                onAddToCart={handleAddToCart}
+                onRemove={handleRemoveProduct}
+              />
+            ))}
+          </div>
+        </div>
       </div>
 
       <Footer name="Adithya Jithesh" links={footerLinks} />

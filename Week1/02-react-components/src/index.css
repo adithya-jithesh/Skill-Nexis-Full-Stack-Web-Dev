@@ -9,9 +9,35 @@ body {
 }
 
 .app {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 10px;
+}
+
+/* Two columns: form on the left, products on the right. */
+.layout {
+  display: flex;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.left-column {
+  width: 300px;
+}
+
+.right-column {
+  flex: 1;
+}
+
+/* On a small screen the two columns stack on top of each other. */
+@media (max-width: 750px) {
+  .layout {
+    display: block;
+  }
+
+  .left-column {
+    width: auto;
+  }
 }
 
 /* Header */
@@ -43,7 +69,6 @@ body {
   border: 1px solid #cccccc;
   border-radius: 4px;
   padding: 15px;
-  margin-top: 15px;
 }
 
 .form h2 {
@@ -76,10 +101,6 @@ body {
 }
 
 /* Search and filter row */
-.toolbar {
-  margin-top: 15px;
-}
-
 .toolbar input,
 .toolbar select {
   padding: 6px;
