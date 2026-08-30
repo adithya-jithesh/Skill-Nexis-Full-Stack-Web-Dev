@@ -1,0 +1,213 @@
+/* Styles for the blog. Plain CSS, no framework. */
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f2f2f2;
+  color: #222222;
+  margin: 0;
+  padding: 0;
+}
+
+.app {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+/* Header */
+.header {
+  background-color: #1f4e79;
+  color: #ffffff;
+  padding: 15px;
+  border-radius: 4px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.header p {
+  margin: 5px 0 0 0;
+  font-size: 14px;
+}
+
+.header__count {
+  font-size: 13px;
+}
+
+/* Two columns: filters on the left, posts on the right. */
+.layout {
+  display: flex;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.left-column {
+  width: 240px;
+}
+
+.right-column {
+  flex: 1;
+}
+
+/* On a small screen the two columns stack on top of each other. */
+@media (max-width: 750px) {
+  .layout {
+    display: block;
+  }
+
+  .left-column {
+    width: auto;
+    margin-bottom: 15px;
+  }
+}
+
+/* Sidebar */
+.sidebar {
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  padding: 15px;
+}
+
+.sidebar h2 {
+  font-size: 15px;
+  margin: 0 0 6px 0;
+}
+
+.sidebar input {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #cccccc;
+  border-radius: 3px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+.category-list {
+  list-style: none;
+  margin: 0 0 10px 0;
+  padding: 0;
+}
+
+.category-btn {
+  width: 100%;
+  text-align: left;
+  padding: 5px 8px;
+  margin-bottom: 3px;
+  border: 1px solid #ffffff;
+  border-radius: 3px;
+  background-color: #ffffff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.category-btn:hover {
+  background-color: #eeeeee;
+}
+
+.category-btn-active {
+  background-color: #1f4e79;
+  border-color: #1f4e79;
+  color: #ffffff;
+}
+
+/* keep the selected button dark when the mouse is over it, otherwise the
+   hover rule above turns it white and the white text disappears */
+.category-btn-active:hover {
+  background-color: #1f4e79;
+}
+
+/* Posts */
+.post {
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 12px;
+}
+
+.post h3 {
+  margin: 6px 0 4px 0;
+  font-size: 18px;
+}
+
+.post p {
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+.post__category {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  background-color: #e3ecf4;
+  color: #1f4e79;
+  font-size: 12px;
+}
+
+.post__meta {
+  color: #666666;
+  font-size: 13px;
+}
+
+.post__content {
+  border-left: 3px solid #cccccc;
+  padding-left: 10px;
+  color: #444444;
+}
+
+.post__tags {
+  list-style: none;
+  margin: 10px 0 0 0;
+  padding: 0;
+}
+
+.post__tags li {
+  display: inline-block;
+  margin-right: 8px;
+  color: #1f4e79;
+  font-size: 13px;
+}
+
+.no-results {
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  padding: 15px;
+  font-size: 14px;
+}
+
+/* Buttons */
+.btn {
+  padding: 6px 12px;
+  margin-top: 8px;
+  border: 1px solid #cccccc;
+  border-radius: 3px;
+  background-color: #eeeeee;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #dddddd;
+}
+
+/* Footer */
+.footer {
+  margin-top: 20px;
+  padding: 12px;
+  border-top: 1px solid #cccccc;
+  font-size: 13px;
+  text-align: center;
+}
+
+.footer a {
+  color: #1f4e79;
+  margin: 0 6px;
+}

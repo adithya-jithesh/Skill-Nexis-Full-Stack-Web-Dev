@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "title": "Why semantic HTML still matters",
+    "author": "Adithya Jithesh",
+    "date": "2026-08-04",
+    "category": "HTML",
+    "tags": ["html5", "accessibility"],
+    "summary": "A page built out of divs looks the same but reads as one big blob to a screen reader.",
+    "content": "Tags like header, nav, main, section, article and footer are landmarks. A screen reader user can jump straight to main or list every navigation region on the page. With div class=header none of that exists, because a div carries no meaning at all. Search engines read the same structure. The rule I follow now is simple: reach for a div only when no semantic tag fits."
+  },
+  {
+    "id": 2,
+    "title": "Flexbox or Grid: how I finally decided",
+    "author": "Adithya Jithesh",
+    "date": "2026-08-07",
+    "category": "CSS",
+    "tags": ["flexbox", "grid", "layout"],
+    "summary": "One line: Flexbox is one direction, Grid is two.",
+    "content": "A navigation bar is a row, so it is Flexbox. A wall of cards has both rows and columns, so it is Grid. The single most useful line I learned this week is grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)). It gives three columns on a laptop, two on a tablet and one on a phone, and it needs no media query at all because the browser does the arithmetic."
+  },
+  {
+    "id": 3,
+    "title": "The viewport meta tag is not optional",
+    "author": "Adithya Jithesh",
+    "date": "2026-08-09",
+    "category": "CSS",
+    "tags": ["responsive", "mobile"],
+    "summary": "Without it, phones pretend to be a 980px desktop and every media query is ignored.",
+    "content": "Mobile browsers assume old websites were built for desktop, so they render at about 980px wide and shrink the result. Your breakpoints never fire and the page just looks zoomed out. Adding meta name=viewport content=width=device-width, initial-scale=1.0 tells the browser the viewport is as wide as the device really is. Every responsive rule you write depends on that one line."
+  },
+  {
+    "id": 4,
+    "title": "A component is just a function that returns UI",
+    "author": "Adithya Jithesh",
+    "date": "2026-08-14",
+    "category": "React",
+    "tags": ["components", "props"],
+    "summary": "Not a class, not a template. Data goes in, markup comes out.",
+    "content": "Two rules turn an ordinary function into a component. The name starts with a capital letter, because that is literally how React tells your Button apart from the html button tag. And it returns JSX. Everything else is normal JavaScript. Once that clicked, the four near identical project cards I had copy pasted in my portfolio became one Card component rendered four times with different props."
+  },
+  {
+    "id": 5,
+    "title": "Props go down, functions come up",
+    "author": "Adithya Jithesh",
+    "date": "2026-08-18",
+    "category": "React",
+    "tags": ["props", "state"],
+    "summary": "A child cannot change its parent's state, so the parent hands down a function instead.",
+    "content": "In my supermarket app the product list lives in App, because the Header needs the cart total and the Card needs to change the stock. When two components need the same data it has to live in their closest shared parent. That is called lifting state up. The Card then receives onAddToCart as a prop and calls it, and App changes its own state. Data flows one way and it is always obvious who owns what."
+  },
+  {
+    "id": 6,
+    "title": "If you can calculate it, do not store it",
+    "author": "Adithya Jithesh",
+    "date": "2026-08-21",
+    "category": "React",
+    "tags": ["state", "derived"],
+    "summary": "Extra state is extra things that can disagree with each other.",
+    "content": "My first version kept a separate piece of state for the filtered list and updated it in two places. Then the search box and the list drifted apart and I could not work out why. The fix was to delete that state and calculate the filtered list on every render from the products and the search text. Two values that are computed from one source can never disagree. The same goes for the cart total and the stock label."
+  },
+  {
+    "id": 7,
+    "title": "Controlled inputs, and why the form kept resetting",
+    "author": "Adithya Jithesh",
+    "date": "2026-08-24",
+    "category": "React",
+    "tags": ["forms", "state"],
+    "summary": "value plus onChange makes React the single source of truth.",
+    "content": "A controlled input reads its value from state and writes every keystroke back through onChange. Miss the onChange and the field appears frozen, because React keeps putting the old value back. The other thing that caught me out was the page reloading on submit. A form does that by default, and event.preventDefault() at the top of the submit handler is what stops it."
+  },
+  {
+    "id": 8,
+    "title": "Never mutate state directly",
+    "author": "Adithya Jithesh",
+    "date": "2026-08-27",
+    "category": "JavaScript",
+    "tags": ["arrays", "state"],
+    "summary": "push changes the data but nothing appears on screen.",
+    "content": "React decides whether to re-render by checking whether the value is a different object than last time. items.push(newItem) changes the array in place, so it is still the same array and React sees no change. Building a new one with setItems([...items, newItem]) gives it something different to compare. The same idea applies to objects: spread the old one into a new one instead of assigning to a key."
+  },
+  {
+    "id": 9,
+    "title": "Git: rewriting the author on old commits",
+    "author": "Adithya Jithesh",
+    "date": "2026-08-28",
+    "category": "Tools",
+    "tags": ["git", "github"],
+    "summary": "GitHub only credits commits whose email is registered to your account.",
+    "content": "I had committed a few times with the wrong email, so those commits showed a blank avatar and did not count on my contribution graph. Rewriting the author changes the commit hash, because the email is part of what the hash is built from, which means a force push. That is safe on a private repo where you are the only contributor, and a bad idea on a shared branch after other people have pulled."
+  },
+  {
+    "id": 10,
+    "title": "Reading a JSON file into a React app",
+    "author": "Adithya Jithesh",
+    "date": "2026-08-30",
+    "category": "React",
+    "tags": ["json", "data"],
+    "summary": "An import is enough. No fetch, no useEffect, no loading state.",
+    "content": "This blog reads its posts from a local posts.json file. Because Vite bundles the file at build time, import posts from ./data/posts.json gives you a plain JavaScript array immediately. There is nothing to wait for, so there is no loading spinner and no useEffect. That changes the day the posts come from a real API, and that is exactly what the MERN backend weeks are for."
+  }
+]
