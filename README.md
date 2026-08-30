@@ -54,9 +54,6 @@ State lives in `App.jsx` and flows down through props: the form adds products,
 cards sell and remove them, the search box and category dropdown filter them,
 and the header cart updates automatically.
 
-See [`FLOW.md`](FLOW.md) for how the pieces fit together and
-[`DECISIONS.md`](DECISIONS.md) for why each choice was made.
-
 **Run it:**
 ```bash
 cd Week1/02-react-components
@@ -89,13 +86,6 @@ npm install
 npm run dev
 ```
 
-**Run it:**
-```bash
-cd Week1/02-react-components
-npm install
-npm run dev
-```
-
 ---
 
 ## Repository structure
@@ -103,8 +93,6 @@ npm run dev
 ```
 .
 ├── README.md
-├── DECISIONS.md
-├── FLOW.md
 └── Week1/
     ├── 01-portfolio/          # HTML + CSS + vanilla JS
     │   ├── index.html
