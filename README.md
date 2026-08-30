@@ -13,8 +13,6 @@ Assignment submissions for the SkillNexis Full Stack Web Development (MERN) virt
 | 2 | React Components Practice | https://adithya-jithesh.github.io/Skill-Nexis-Full-Stack-Web-Dev/shop/ |
 | 3 | Mini Project - Blog UI | https://adithya-jithesh.github.io/Skill-Nexis-Full-Stack-Web-Dev/blog/ |
 
-Deployed automatically with GitHub Pages on every push to `main`.
-
 ---
 
 ## Week 1 - Frontend Fundamentals (HTML, CSS, React Basics)
