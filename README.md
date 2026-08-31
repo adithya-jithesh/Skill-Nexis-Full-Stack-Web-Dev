@@ -88,16 +88,78 @@ npm run dev
 
 ---
 
+## Week 2 - Backend Development (Node.js, Express.js, MongoDB)
+
+**Topics:** Node.js basics and NPM setup - Express.js framework and routing - MongoDB and Mongoose - REST API design principles - Authentication using JWT and bcrypt
+
+| # | Deliverable | Folder | Port | Status |
+|---|-------------|--------|------|--------|
+| 1 | To-Do List REST API | [`Week2/01-todo-api`](Week2/01-todo-api) | 5000 | Done |
+| 2 | User Authentication API | [`Week2/02-auth-api`](Week2/02-auth-api) | 5001 | Done |
+| 3 | Mini Project - Notes App Backend | [`Week2/03-notes-app-backend`](Week2/03-notes-app-backend) | 5002 | Done |
+
+Three standalone Express APIs, each with its own README and Postman collection.
+They are Node servers with MongoDB behind them, so unlike Week 1 they are not on
+GitHub Pages - they run locally, which is what the assignment asks for. See
+[`Week2/README.md`](Week2/README.md) for the full write-up.
+
+### 1. To-Do List REST API
+CRUD endpoints for tasks, stored in MongoDB and tested in Postman.
+
+- `GET`, `POST`, `PUT`, `PATCH` and `DELETE` on `/api/tasks`, with optional
+  `?completed=` and `?priority=` filters
+- Validation on the Mongoose schema, so bad data never reaches the database
+- Routes, controllers, model and error handling in separate files
+- Every failure returns JSON with the right status code, never an HTML crash page
+
+### 2. User Authentication API
+Registration and login with hashed passwords and JWT-protected routes.
+
+- Passwords hashed by a bcrypt `pre("save")` hook with a per-user salt
+- The hash is `select: false`, so it stays out of query results by default
+- `POST /api/auth/register` and `/login` return a signed JWT; `GET /api/auth/me`
+  needs it
+- Wrong password and unknown email give the same error, so the API cannot be
+  used to find out which addresses have accounts
+
+### 3. Mini Project - Notes App Backend
+A notes API with full CRUD where every note route is behind JWT auth.
+
+- All of `/api/notes` guarded in one line with `router.use(protect)`
+- Notes belong to a user: every query filters on `owner` as well as `_id`
+- Another user's note returns `404`, the same as one that never existed, so the
+  API gives nothing away
+- Search across title, content and tags, filter by tag or pinned, and tag counts
+- Verified with 36 automated checks against a live server and database,
+  including a second account that cannot read, change or delete the first
+  account's notes
+
+**Run any of them:**
+```bash
+cd Week2/01-todo-api      # or 02-auth-api, or 03-notes-app-backend
+npm install
+cp .env.example .env
+npm run dev
+```
+
+---
+
 ## Repository structure
 
 ```
 .
 ├── README.md
-└── Week1/
-    ├── 01-portfolio/          # HTML + CSS + vanilla JS
-    │   ├── index.html
-    │   ├── css/style.css
-    │   └── js/script.js
-    ├── 02-react-components/   # Vite + React
-    └── 03-react-blog-ui/      # Vite + React
+├── Week1/                          # Frontend - HTML, CSS, React
+│   ├── 01-portfolio/               # HTML + CSS + vanilla JS
+│   │   ├── index.html
+│   │   ├── css/style.css
+│   │   └── js/script.js
+│   ├── 02-react-components/        # Vite + React
+│   └── 03-react-blog-ui/           # Vite + React
+└── Week2/                          # Backend - Node, Express, MongoDB
+    ├── 01-todo-api/                # Express + Mongoose
+    │   ├── src/                    # server, config, models, routes, controllers, middleware
+    │   └── postman/                # importable Postman collection
+    ├── 02-auth-api/                # + bcrypt and JWT
+    └── 03-notes-app-backend/       # CRUD behind JWT, notes owned by a user
 ```
