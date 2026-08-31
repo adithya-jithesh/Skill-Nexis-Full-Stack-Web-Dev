@@ -1,0 +1,96 @@
+{
+  "info": {
+    "name": "Week 2 - To-Do List REST API",
+    "description": "SkillNexis Week 2, assignment 1. Start the server with `npm run dev`, then run these top to bottom. Creating a task saves its id into the {{taskId}} variable, so the requests below it work without any copy-pasting.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000" },
+    { "key": "taskId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Health check",
+      "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/", "host": ["{{baseUrl}}"], "path": [""] } }
+    },
+    {
+      "name": "Create a task",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('201 Created', () => pm.response.to.have.status(201));",
+              "const body = pm.response.json();",
+              "pm.collectionVariables.set('taskId', body.data._id);",
+              "console.log('Saved taskId:', body.data._id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Finish the Week 2 backend\",\n  \"description\": \"Build the three APIs and test them in Postman\",\n  \"priority\": \"high\",\n  \"dueDate\": \"2026-09-05\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/api/tasks", "host": ["{{baseUrl}}"], "path": ["api", "tasks"] }
+      }
+    },
+    {
+      "name": "Get all tasks",
+      "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/tasks", "host": ["{{baseUrl}}"], "path": ["api", "tasks"] } }
+    },
+    {
+      "name": "Get all tasks (filtered)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/tasks?completed=false&priority=high",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "tasks"],
+          "query": [
+            { "key": "completed", "value": "false" },
+            { "key": "priority", "value": "high" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get one task",
+      "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/tasks/{{taskId}}", "host": ["{{baseUrl}}"], "path": ["api", "tasks", "{{taskId}}"] } }
+    },
+    {
+      "name": "Update a task",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"title\": \"Finish the Week 2 backend (updated)\",\n  \"completed\": true\n}" },
+        "url": { "raw": "{{baseUrl}}/api/tasks/{{taskId}}", "host": ["{{baseUrl}}"], "path": ["api", "tasks", "{{taskId}}"] }
+      }
+    },
+    {
+      "name": "Toggle completed",
+      "request": { "method": "PATCH", "url": { "raw": "{{baseUrl}}/api/tasks/{{taskId}}/toggle", "host": ["{{baseUrl}}"], "path": ["api", "tasks", "{{taskId}}", "toggle"] } }
+    },
+    {
+      "name": "Delete a task",
+      "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/tasks/{{taskId}}", "host": ["{{baseUrl}}"], "path": ["api", "tasks", "{{taskId}}"] } }
+    },
+    {
+      "name": "Error - empty title (400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"title\": \"\"\n}" },
+        "url": { "raw": "{{baseUrl}}/api/tasks", "host": ["{{baseUrl}}"], "path": ["api", "tasks"] }
+      }
+    },
+    {
+      "name": "Error - unknown id (404)",
+      "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/tasks/6a9581297c5a258cdced0000", "host": ["{{baseUrl}}"], "path": ["api", "tasks", "6a9581297c5a258cdced0000"] } }
+    }
+  ]
+}
