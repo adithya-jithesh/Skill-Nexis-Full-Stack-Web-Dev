@@ -1,0 +1,268 @@
+{
+  "info": {
+    "name": "Week 2 - Notes App Backend (mini project)",
+    "description": "SkillNexis Week 2 mini project. Run 'Register user A' first: it saves the JWT into {{token}}, and every /api/notes request sends that automatically. 'Create a note' saves the new id into {{noteId}}.\n\nThe folder 'Second user - proof notes are private' registers a different account and tries to read and change user A's note. Every one of those comes back 404, because a note can only be reached by the account that owns it.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5002" },
+    { "key": "token", "value": "" },
+    { "key": "noteId", "value": "" },
+    { "key": "otherToken", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Health check",
+      "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/", "host": ["{{baseUrl}}"], "path": [""] } }
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register user A",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('token', pm.response.json().token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Adithya Jithesh\",\n  \"email\": \"adithya@example.com\",\n  \"password\": \"supersecret123\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"] }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set('token', pm.response.json().token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"adithya@example.com\",\n  \"password\": \"supersecret123\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] }
+          }
+        },
+        {
+          "name": "Who am I",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/me", "host": ["{{baseUrl}}"], "path": ["api", "auth", "me"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notes (all protected)",
+      "item": [
+        {
+          "name": "Create a note",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('noteId', pm.response.json().data._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"Express middleware order\",\n  \"content\": \"notFound and errorHandler have to be added last, or they never run.\",\n  \"tags\": [\"Express\", \"node\", \"backend\"],\n  \"pinned\": false\n}" },
+            "url": { "raw": "{{baseUrl}}/api/notes", "host": ["{{baseUrl}}"], "path": ["api", "notes"] }
+          }
+        },
+        {
+          "name": "Get all notes",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/notes", "host": ["{{baseUrl}}"], "path": ["api", "notes"] }
+          }
+        },
+        {
+          "name": "Search notes",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/notes?search=middleware",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notes"],
+              "query": [{ "key": "search", "value": "middleware" }]
+            }
+          }
+        },
+        {
+          "name": "Filter by tag and pinned",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/notes?tag=express&pinned=false",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notes"],
+              "query": [
+                { "key": "tag", "value": "express" },
+                { "key": "pinned", "value": "false" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get my tags with counts",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/notes/tags", "host": ["{{baseUrl}}"], "path": ["api", "notes", "tags"] }
+          }
+        },
+        {
+          "name": "Get one note",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/notes/{{noteId}}", "host": ["{{baseUrl}}"], "path": ["api", "notes", "{{noteId}}"] }
+          }
+        },
+        {
+          "name": "Update a note",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"content\": \"Updated: order matters because Express runs middleware top to bottom.\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/notes/{{noteId}}", "host": ["{{baseUrl}}"], "path": ["api", "notes", "{{noteId}}"] }
+          }
+        },
+        {
+          "name": "Toggle pinned",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/notes/{{noteId}}/pin", "host": ["{{baseUrl}}"], "path": ["api", "notes", "{{noteId}}", "pin"] }
+          }
+        },
+        {
+          "name": "Delete a note",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/notes/{{noteId}}", "host": ["{{baseUrl}}"], "path": ["api", "notes", "{{noteId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Second user - proof notes are private",
+      "item": [
+        {
+          "name": "Register user B",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.collectionVariables.set('otherToken', pm.response.json().token);"]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Someone Else\",\n  \"email\": \"someone.else@example.com\",\n  \"password\": \"anotherpass123\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"] }
+          }
+        },
+        {
+          "name": "B lists notes - sees none of A's",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{otherToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/notes", "host": ["{{baseUrl}}"], "path": ["api", "notes"] }
+          }
+        },
+        {
+          "name": "B reads A's note by id (404)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{otherToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/notes/{{noteId}}", "host": ["{{baseUrl}}"], "path": ["api", "notes", "{{noteId}}"] }
+          }
+        },
+        {
+          "name": "B deletes A's note (404)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{otherToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/notes/{{noteId}}", "host": ["{{baseUrl}}"], "path": ["api", "notes", "{{noteId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Errors",
+      "item": [
+        {
+          "name": "No token (401)",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/notes", "host": ["{{baseUrl}}"], "path": ["api", "notes"] } }
+        },
+        {
+          "name": "Invalid token (401)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer not.a.real.token" }],
+            "url": { "raw": "{{baseUrl}}/api/notes", "host": ["{{baseUrl}}"], "path": ["api", "notes"] }
+          }
+        },
+        {
+          "name": "Empty title (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/notes", "host": ["{{baseUrl}}"], "path": ["api", "notes"] }
+          }
+        },
+        {
+          "name": "Unknown id (404)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/notes/6a9581297c5a258cdced0000", "host": ["{{baseUrl}}"], "path": ["api", "notes", "6a9581297c5a258cdced0000"] }
+          }
+        }
+      ]
+    }
+  ]
+}
