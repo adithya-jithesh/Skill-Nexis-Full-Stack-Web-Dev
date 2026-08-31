@@ -97,6 +97,7 @@ npm run dev
 | 1 | To-Do List REST API | [`Week2/01-todo-api`](Week2/01-todo-api) | 5000 | Done |
 | 2 | User Authentication API | [`Week2/02-auth-api`](Week2/02-auth-api) | 5001 | Done |
 | 3 | Mini Project - Notes App Backend | [`Week2/03-notes-app-backend`](Week2/03-notes-app-backend) | 5002 | Done |
+| + | Notes App Frontend (extra) | [`Week2/04-notes-app-frontend`](Week2/04-notes-app-frontend) | 5173 | Done |
 
 Three standalone Express APIs, each with its own README and Postman collection.
 They are Node servers with MongoDB behind them, so unlike Week 1 they are not on
@@ -133,6 +134,18 @@ A notes API with full CRUD where every note route is behind JWT auth.
 - Verified with 36 automated checks against a live server and database,
   including a second account that cannot read, change or delete the first
   account's notes
+
+### Extra - Notes App Frontend
+Not asked for by Week 2, which stops at the API. A React app that makes the
+mini project usable without Postman.
+
+- Logs in against the notes API and keeps the JWT in `localStorage`, so a
+  refresh does not log you out
+- Sends it as `Authorization: Bearer <token>` on every request; a `401` clears
+  the session and returns to the login screen
+- Write, edit, pin and delete notes, with search and tag filters
+- Searching and filtering ask the API rather than filtering a local copy, so
+  the database does the work
 
 **Run any of them:**
 ```bash

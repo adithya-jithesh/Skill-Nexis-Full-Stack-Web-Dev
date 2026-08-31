@@ -9,6 +9,7 @@ and bcrypt
 | 1 | To-Do List REST API | [`01-todo-api`](01-todo-api) | 5000 | Done |
 | 2 | User Authentication API | [`02-auth-api`](02-auth-api) | 5001 | Done |
 | 3 | Mini Project - Notes App Backend | [`03-notes-app-backend`](03-notes-app-backend) | 5002 | Done |
+| + | Notes App Frontend (extra, not required) | [`04-notes-app-frontend`](04-notes-app-frontend) | 5173 | Done |
 
 Each folder is a standalone Express app with its own `package.json`, `.env.example`,
 README and Postman collection, so any one of them can be run and marked on its own.
@@ -86,6 +87,14 @@ Express 5 forwards a rejected promise to the error middleware on its own, so the
 controllers stay free of `try`/`catch` and every failure - a validation error, a
 malformed id, a duplicate email, a bad token - leaves as JSON with the right
 status code instead of an HTML crash page.
+
+## The extra front end
+
+Week 2 asks for backends only - Postman stands in for a UI. `04-notes-app-frontend`
+is an extra: a React app that logs in against the notes API, keeps the JWT in
+localStorage and sends it as a Bearer header, so the mini project can be
+demonstrated without Postman. Run the backend on 5002 first, then the front end
+on 5173.
 
 ## Note on hosting
 
