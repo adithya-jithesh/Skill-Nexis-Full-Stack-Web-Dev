@@ -1,8 +1,12 @@
+import { useState } from "react";
+
 // NoteCard - one note. Props: note, onEdit, onTogglePin, onDelete.
-// It holds no state: everything it shows comes from props, and the buttons
-// call back up to App, which owns the notes.
+// Its only state is whether the delete confirmation is showing. That belongs
+// here rather than in App, because it concerns this card alone.
 
 function NoteCard({ note, onEdit, onTogglePin, onDelete }) {
+  const [confirming, setConfirming] = useState(false);
+
   // "2026-08-31T13:50:12.574Z" reads better as "31 Aug 2026"
   const edited = new Date(note.updatedAt).toDateString().slice(4);
 
@@ -15,7 +19,7 @@ function NoteCard({ note, onEdit, onTogglePin, onDelete }) {
 
       <p className="note__meta">Updated {edited}</p>
 
-      {/* an empty note is normal - only show the body when there is one */}
+      {/* an empty note is allowed - only show the body when there is one */}
       {note.content && <p className="note__content">{note.content}</p>}
 
       {note.tags.length > 0 && (
@@ -26,17 +30,40 @@ function NoteCard({ note, onEdit, onTogglePin, onDelete }) {
         </ul>
       )}
 
-      <div className="note__actions">
-        <button type="button" className="btn" onClick={() => onEdit(note)}>
-          Edit
-        </button>
-        <button type="button" className="btn" onClick={() => onTogglePin(note._id)}>
-          {note.pinned ? "Unpin" : "Pin"}
-        </button>
-        <button type="button" className="btn btn-danger" onClick={() => onDelete(note._id)}>
-          Delete
-        </button>
-      </div>
+      {/* Deleting asks first. The confirmation replaces the buttons in place
+          instead of opening a browser popup, so nothing is lost to one
+          stray click and the page is never blocked. */}
+      {confirming ? (
+        <div className="note__confirm">
+          <span>Delete this note?</span>
+          <button
+            type="button"
+            className="btn btn-danger"
+            onClick={() => onDelete(note._id)}
+          >
+            Delete
+          </button>
+          <button type="button" className="btn" onClick={() => setConfirming(false)}>
+            Cancel
+          </button>
+        </div>
+      ) : (
+        <div className="note__actions">
+          <button type="button" className="btn" onClick={() => onEdit(note)}>
+            Edit
+          </button>
+          <button type="button" className="btn" onClick={() => onTogglePin(note._id)}>
+            {note.pinned ? "Unpin" : "Pin"}
+          </button>
+          <button
+            type="button"
+            className="btn btn-danger"
+            onClick={() => setConfirming(true)}
+          >
+            Delete
+          </button>
+        </div>
+      )}
     </article>
   );
 }

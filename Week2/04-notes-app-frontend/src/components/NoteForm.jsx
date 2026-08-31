@@ -1,29 +1,22 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 // NoteForm - writes a new note, and doubles as the editor for an existing one.
 // Props: editingNote (null when writing a new one), onCreate, onUpdate, onCancelEdit.
-
-const empty = { title: "", content: "", tags: "" };
+//
+// There is no useEffect syncing the boxes to the note being edited. App gives
+// this component a key that changes when the note does, so React throws the
+// old copy away and builds a fresh one - and useState below just reads the
+// right starting values. That is simpler than watching a prop and copying it
+// into state afterwards, and it cannot fall out of step.
 
 function NoteForm({ editingNote, onCreate, onUpdate, onCancelEdit }) {
-  const [values, setValues] = useState(empty);
+  const [values, setValues] = useState({
+    title: editingNote ? editingNote.title : "",
+    content: editingNote ? editingNote.content : "",
+    tags: editingNote ? editingNote.tags.join(", ") : "",
+  });
   const [error, setError] = useState("");
-
-  // When App hands over a note to edit, load it into the boxes. This is a
-  // genuine use for useEffect: the form state has to follow a prop that
-  // changed somewhere else.
-  useEffect(() => {
-    if (editingNote) {
-      setValues({
-        title: editingNote.title,
-        content: editingNote.content,
-        tags: editingNote.tags.join(", "),
-      });
-    } else {
-      setValues(empty);
-    }
-    setError("");
-  }, [editingNote]);
+  const [busy, setBusy] = useState(false);
 
   function handleChange(event) {
     setValues({ ...values, [event.target.name]: event.target.value });
@@ -48,17 +41,21 @@ function NoteForm({ editingNote, onCreate, onUpdate, onCancelEdit }) {
         .filter(Boolean),
     };
 
+    setBusy(true);
+
     const failure = editingNote
       ? await onUpdate(editingNote._id, note)
       : await onCreate(note);
 
-    // The API rejected it - show why and keep what was typed.
+    setBusy(false);
+
+    // The API rejected it - show why, and keep what was typed.
     if (failure) {
       setError(failure);
       return;
     }
 
-    setValues(empty);
+    setValues({ title: "", content: "", tags: "" });
     setError("");
   }
 
@@ -66,37 +63,55 @@ function NoteForm({ editingNote, onCreate, onUpdate, onCancelEdit }) {
     <form className="note-form" onSubmit={handleSubmit}>
       <h2>{editingNote ? "Edit note" : "New note"}</h2>
 
-      <label htmlFor="title">Title</label>
-      <input id="title" name="title" value={values.title} onChange={handleChange} />
+      <div className="field">
+        <label htmlFor="title">Title</label>
+        <input
+          id="title"
+          name="title"
+          value={values.title}
+          onChange={handleChange}
+          placeholder="What is this about?"
+        />
+      </div>
 
-      <label htmlFor="content">Content</label>
-      <textarea
-        id="content"
-        name="content"
-        rows="6"
-        value={values.content}
-        onChange={handleChange}
-      />
+      <div className="field">
+        <label htmlFor="content">Content</label>
+        <textarea
+          id="content"
+          name="content"
+          rows="6"
+          value={values.content}
+          onChange={handleChange}
+          placeholder="Write it down..."
+        />
+      </div>
 
-      <label htmlFor="tags">Tags</label>
-      <input
-        id="tags"
-        name="tags"
-        value={values.tags}
-        onChange={handleChange}
-        placeholder="react, node, backend"
-      />
-      <p className="hint">Separate tags with commas.</p>
+      <div className="field">
+        <label htmlFor="tags">Tags</label>
+        <input
+          id="tags"
+          name="tags"
+          value={values.tags}
+          onChange={handleChange}
+          placeholder="react, node, backend"
+        />
+        <p className="hint">Separate tags with commas.</p>
+      </div>
 
       {error && <p className="error">{error}</p>}
 
-      <button type="submit" className="btn btn-primary">
-        {editingNote ? "Save changes" : "Add note"}
+      <button type="submit" className="btn btn-primary btn-block" disabled={busy}>
+        {busy ? "Saving..." : editingNote ? "Save changes" : "Add note"}
       </button>
 
       {/* only offered while editing */}
       {editingNote && (
-        <button type="button" className="btn" onClick={onCancelEdit}>
+        <button
+          type="button"
+          className="btn btn-block"
+          style={{ marginTop: "8px" }}
+          onClick={onCancelEdit}
+        >
           Cancel
         </button>
       )}

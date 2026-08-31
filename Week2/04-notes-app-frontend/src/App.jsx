@@ -23,6 +23,8 @@ function App() {
   const [authError, setAuthError] = useState("");
 
   const [notes, setNotes] = useState([]);
+  // The unfiltered total, so the header can say "showing 2 of 7".
+  const [totalCount, setTotalCount] = useState(0);
   const [tags, setTags] = useState([]);
   const [search, setSearch] = useState("");
   const [activeTag, setActiveTag] = useState("");
@@ -37,6 +39,7 @@ function App() {
     setToken("");
     setUser(null);
     setNotes([]);
+    setTotalCount(0);
     setTags([]);
     setEditingNote(null);
     setSearch("");
@@ -51,6 +54,10 @@ function App() {
     setMessage("");
 
     try {
+      const filtering = Boolean(search || activeTag);
+
+      // Both at once rather than one after the other, since neither needs
+      // the other's answer.
       const [noteResult, tagResult] = await Promise.all([
         api.getNotes(token, { search, tag: activeTag }),
         api.getTags(token),
@@ -58,6 +65,16 @@ function App() {
 
       setNotes(noteResult.data);
       setTags(tagResult.data);
+
+      // The header wants the unfiltered total for "showing 2 of 7". When
+      // nothing is filtered the list just fetched is already that total, so
+      // only ask again when a filter is actually on.
+      if (filtering) {
+        const allResult = await api.getNotes(token);
+        setTotalCount(allResult.count);
+      } else {
+        setTotalCount(noteResult.count);
+      }
     } catch (error) {
       // 401 means the token has expired or is no longer accepted, so the
       // only sensible thing is to send the user back to the login screen.
@@ -157,7 +174,7 @@ function App() {
   if (!token) {
     return (
       <div className="app">
-        <Header user={null} noteCount={0} onLogout={logout} />
+        <Header user={null} noteCount={0} totalCount={0} filtered={false} onLogout={logout} />
         <AuthForm onLogin={handleLogin} onRegister={handleRegister} error={authError} />
         <Footer name="Adithya Jithesh" links={footerLinks} />
       </div>
@@ -166,14 +183,37 @@ function App() {
 
   return (
     <div className="app">
-      <Header user={user} noteCount={notes.length} onLogout={logout} />
+      <Header
+        user={user}
+        noteCount={notes.length}
+        totalCount={totalCount}
+        filtered={Boolean(search || activeTag)}
+        onLogout={logout}
+      />
 
-      {message && <p className="banner">{message}</p>}
+      {message && (
+        <p className="banner">
+          {message}
+          <button
+            type="button"
+            className="banner__close"
+            aria-label="Dismiss"
+            onClick={() => setMessage("")}
+          >
+            &times;
+          </button>
+        </p>
+      )}
 
       {/* two columns: writing and filtering on the left, the notes on the right */}
       <div className="layout">
         <div className="left-column">
+          {/* The key is what resets the form. When a different note is
+              picked for editing (or editing is cancelled) the key changes,
+              React discards the old form and mounts a fresh one already
+              holding that note's values - no effect needed. */}
           <NoteForm
+            key={editingNote ? editingNote._id : "new"}
             editingNote={editingNote}
             onCreate={handleCreate}
             onUpdate={handleUpdate}
@@ -191,25 +231,41 @@ function App() {
         </div>
 
         <div className="right-column">
-          {loading && <p className="hint">Loading...</p>}
-
-          {!loading && notes.length === 0 && (
-            <p className="no-results">
-              {search || activeTag
-                ? "No notes match that. Try clearing the filters."
-                : "Nothing here yet. Write your first note on the left."}
-            </p>
+          {/* Grey placeholder cards while the request is in flight, so the
+              layout does not jump once the notes arrive. */}
+          {loading && (
+            <div className="note-grid">
+              <div className="skeleton" />
+              <div className="skeleton" />
+            </div>
           )}
 
-          {notes.map((note) => (
-            <NoteCard
-              key={note._id}
-              note={note}
-              onEdit={setEditingNote}
-              onTogglePin={handleTogglePin}
-              onDelete={handleDelete}
-            />
-          ))}
+          {!loading && notes.length === 0 && (
+            <div className="empty">
+              <p className="empty__title">
+                {search || activeTag ? "Nothing matches that" : "No notes yet"}
+              </p>
+              <p>
+                {search || activeTag
+                  ? "Try a different search, or clear the filters on the left."
+                  : "Write your first note using the form on the left."}
+              </p>
+            </div>
+          )}
+
+          {!loading && notes.length > 0 && (
+            <div className="note-grid">
+              {notes.map((note) => (
+                <NoteCard
+                  key={note._id}
+                  note={note}
+                  onEdit={setEditingNote}
+                  onTogglePin={handleTogglePin}
+                  onDelete={handleDelete}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

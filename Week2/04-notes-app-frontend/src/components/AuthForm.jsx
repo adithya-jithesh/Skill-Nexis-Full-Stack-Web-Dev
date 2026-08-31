@@ -44,7 +44,7 @@ function AuthForm({ onLogin, onRegister, error }) {
       <form onSubmit={handleSubmit}>
         {/* the name box only exists when signing up */}
         {isRegister && (
-          <>
+          <div className="field">
             <label htmlFor="name">Name</label>
             <input
               id="name"
@@ -52,35 +52,41 @@ function AuthForm({ onLogin, onRegister, error }) {
               value={values.name}
               onChange={handleChange}
               autoComplete="name"
+              placeholder="Your name"
             />
-          </>
+          </div>
         )}
 
-        <label htmlFor="email">Email</label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          value={values.email}
-          onChange={handleChange}
-          autoComplete="email"
-        />
+        <div className="field">
+          <label htmlFor="email">Email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            value={values.email}
+            onChange={handleChange}
+            autoComplete="email"
+            placeholder="you@example.com"
+          />
+        </div>
 
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          value={values.password}
-          onChange={handleChange}
-          autoComplete={isRegister ? "new-password" : "current-password"}
-        />
-        {isRegister && <p className="hint">At least 8 characters.</p>}
+        <div className="field">
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            value={values.password}
+            onChange={handleChange}
+            autoComplete={isRegister ? "new-password" : "current-password"}
+            placeholder={isRegister ? "At least 8 characters" : "Your password"}
+          />
+        </div>
 
         {/* whatever the API said went wrong */}
         {error && <p className="error">{error}</p>}
 
-        <button type="submit" className="btn btn-primary" disabled={busy}>
+        <button type="submit" className="btn btn-primary btn-block" disabled={busy}>
           {busy ? "Please wait..." : isRegister ? "Sign up" : "Log in"}
         </button>
       </form>
