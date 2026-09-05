@@ -1,27 +1,25 @@
 # Mini Project - Notes App Backend
 
-The backend for a note-taking app: full CRUD over notes, with every note route
-behind JWT authentication. It puts assignments 1 and 2 together - the CRUD and
-REST design from the to-do API, the bcrypt and JWT work from the auth API -
-and adds the piece neither of them needed: **notes belong to a user**.
+A backend for a note-taking app: full CRUD over notes, every note route behind
+JWT auth. It's the first two assignments stuck together - the CRUD and REST
+design from the to-do API, the bcrypt and JWT work from the auth API - with the
+one piece neither of them needed, which is that notes belong to somebody.
 
-## What it does
-
-| Method | Endpoint | Protected | Does |
-|--------|----------|-----------|------|
+| Method | Endpoint | Token | What it does |
+|--------|----------|-------|--------------|
 | GET | `/` | no | Health check |
 | POST | `/api/auth/register` | no | Create an account, returns a JWT |
 | POST | `/api/auth/login` | no | Log in, returns a JWT |
 | GET | `/api/auth/me` | yes | The logged-in user |
 | GET | `/api/notes` | yes | Your notes. `?search=` `?tag=` `?pinned=true` |
-| GET | `/api/notes/tags` | yes | Your tags, with how often each is used |
+| GET | `/api/notes/tags` | yes | Your tags, and how often each is used |
 | GET | `/api/notes/:id` | yes | One note |
 | POST | `/api/notes` | yes | Create a note |
-| PUT | `/api/notes/:id` | yes | Update a note (only the fields you send) |
+| PUT | `/api/notes/:id` | yes | Update one - only the fields you send |
 | PATCH | `/api/notes/:id/pin` | yes | Flip `pinned` |
 | DELETE | `/api/notes/:id` | yes | Delete a note |
 
-Send the token as `Authorization: Bearer <token>`.
+Token goes in as `Authorization: Bearer <token>`.
 
 ## Running it
 
@@ -29,43 +27,40 @@ Send the token as `Authorization: Bearer <token>`.
 cd Week2/03-notes-app-backend
 npm install
 cp .env.example .env
-# put a real secret in .env:
+# generate a secret and paste it into .env:
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 npm run dev
 ```
 
-Runs on <http://localhost:5002>, so all three Week 2 APIs can run at once
-(5000, 5001, 5002).
+Port 5002, which means all three Week 2 APIs can run together on 5000, 5001
+and 5002. Same four `.env` variables as the auth API, with `notes_app` as the
+default database.
 
-### Environment variables
+## The part I actually had to think about
 
-| Variable | Default | What it is |
-|----------|---------|------------|
-| `PORT` | `5002` | Port the API listens on |
-| `MONGODB_URI` | `mongodb://127.0.0.1:27017/notes_app` | Local MongoDB, or an Atlas string |
-| `JWT_SECRET` | *(none)* | Signs and verifies tokens |
-| `JWT_EXPIRES_IN` | `7d` | How long a token lasts |
+A token proves *who* is asking. It says nothing about *what they're allowed to
+touch*. Both matter here, and only the first one was covered by assignment 2.
 
-## The part that matters: notes are private
-
-Checking the token proves *who* is asking. It says nothing about *what they
-are allowed to touch*. Both are needed here.
-
-Every query filters on the owner as well as the id:
+So every query filters on the owner as well as the id:
 
 ```js
 const note = await Note.findOne({ _id: req.params.id, owner: req.user._id });
 ```
 
-- The owner comes from the **token**, never from the request body, so nobody
-  can create a note inside someone else's account by sending `owner`.
-- Reaching for another user's note returns **404, not 403**. A 403 would
-  confirm the note exists and just isn't yours. A 404 gives nothing away -
-  it looks exactly like a note that was never there.
-- `router.use(protect)` guards the whole notes router in one line, so a route
-  added later is protected by default rather than by memory.
+The owner comes off the token, never out of the request body. Otherwise you
+could create a note inside someone else's account just by sending an `owner`
+field along with it.
 
-## Note shape
+Asking for somebody else's note gets a 404 rather than a 403. A 403 would be
+admitting the note exists and just isn't yours, which is a small leak but a
+real one - you could walk ids and map out who has what. A 404 looks exactly
+like a note that was never there.
+
+And `router.use(protect)` guards the whole notes router in one line, so a route
+someone adds later is protected because of where it lives, not because they
+remembered to.
+
+## What a note looks like
 
 ```json
 {
@@ -76,55 +71,54 @@ const note = await Note.findOne({ _id: req.params.id, owner: req.user._id });
 }
 ```
 
-Tags are lowercased and trimmed by the schema, so `"React"`, `"react "` and
-`"react"` all become the same tag and filtering works as expected. Listing
-puts pinned notes first, then the most recently updated.
+The schema lowercases and trims tags, so `"React"`, `"react "` and `"react"`
+all collapse into one tag and filtering behaves. Listing puts pinned notes
+first, then most recently updated.
 
-`?search=` matches title, content and tags, case-insensitively, and escapes
-regex characters first - so searching for `c++` or `(` looks for that text
-rather than being read as a broken pattern.
+`?search=` looks through title, content and tags, case-insensitively. It
+escapes regex characters before building the pattern - otherwise searching for
+`c++` or a stray `(` either finds nothing or throws, depending on the
+character, because the search text was being read as a pattern rather than as
+text.
 
-## Tested
+## Testing
 
-`36` checks were run against a live server and a live MongoDB, covering CRUD,
-search and filters, validation, and the isolation between two accounts:
+36 checks against a live server and a live database, covering CRUD, search and
+filters, validation, and whether two accounts can see each other's notes:
 
-| Group | Result |
-|-------|--------|
-| Register / login / `me` | pass |
-| Notes routes reject no token, a junk token, an expired token | pass |
-| Create, read, update, toggle pin, delete | pass |
-| Partial update keeps the untouched fields | pass |
-| Tags lowercased, pinned notes sorted first, tag counts | pass |
-| Search: plain, case-insensitive, and with regex characters | pass |
-| **User B cannot list, read, update, pin or delete user A's notes** | pass (404 each) |
-| **`owner` in the request body is ignored** | pass |
-| Validation errors `400`, unknown ids `404` | pass |
+- register / login / `me`
+- notes routes turning away no token, junk tokens and expired tokens
+- create, read, update, pin, delete
+- partial updates leaving the untouched fields alone
+- tags lowercased, pinned notes sorted first, tag counts adding up
+- search plain, case-insensitive, and with regex characters in it
+- user B failing to list, read, update, pin or delete user A's notes - 404 each
+- an `owner` field in the request body being ignored
+- validation errors as 400, unknown ids as 404
 
-Import `postman/notes-app.postman_collection.json` to run these by hand. It is
-organised into folders - Auth, Notes, "Second user - proof notes are private",
-and Errors - and the tokens and note ids are passed between requests
-automatically.
+All passing. `postman/notes-app.postman_collection.json` runs the same ground
+by hand - it's split into Auth, Notes, "Second user - proof notes are private",
+and Errors, and tokens and note ids get passed between requests automatically.
 
-## How the code is organised
+## Layout
 
 ```
 src/
-├── server.js                        # Express setup, mounts both routers
-├── config/db.js                     # the MongoDB connection
+├── server.js                      # Express setup, mounts both routers
+├── config/db.js                   # the MongoDB connection
 ├── models/
-│   ├── User.js                      # bcrypt hashing hook, password check
-│   └── Note.js                      # note schema, tag normalising, owner link
+│   ├── User.js                    # bcrypt hashing hook, password check
+│   └── Note.js                    # note schema, tag normalising, owner link
 ├── routes/
-│   ├── authRoutes.js                # register / login / me
-│   └── noteRoutes.js                # protected with router.use(protect)
+│   ├── authRoutes.js              # register / login / me
+│   └── noteRoutes.js              # protected with router.use(protect)
 ├── controllers/
-│   ├── authController.js            # registration, login, token signing
-│   └── noteController.js            # CRUD, always scoped to req.user
+│   ├── authController.js          # registration, login, token signing
+│   └── noteController.js          # CRUD, always scoped to req.user
 └── middleware/
-    ├── auth.js                      # protect - verifies the JWT
-    └── errorHandler.js              # 404s and errors, as JSON
+    ├── auth.js                    # protect - verifies the JWT
+    └── errorHandler.js            # 404s and errors, as JSON
 ```
 
-The auth half is the same code as assignment 2, kept as its own folder so each
-assignment can be run and marked on its own.
+The auth half is the same code as assignment 2. I copied it rather than
+importing it so each assignment stays runnable and markable on its own.

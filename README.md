@@ -1,85 +1,74 @@
 # SkillNexis - Full Stack Web Development (MERN)
 
-Assignment submissions for the SkillNexis Full Stack Web Development (MERN) virtual internship.
+My work for the SkillNexis MERN virtual internship. One folder per week, and
+each project inside runs on its own.
 
 **Adithya Jithesh** - B.Tech Electronics & Computer Engineering, Somaiya Vidyavihar School of Engineering
 [GitHub](https://github.com/adithya-jithesh) · [LinkedIn](https://linkedin.com/in/adithyajithesh)
 
-### Live sites
+The Week 1 projects are static, so they're on GitHub Pages:
 
-| # | Assignment | Live link |
-|---|------------|-----------|
-| 1 | Personal Portfolio | https://adithya-jithesh.github.io/Skill-Nexis-Full-Stack-Web-Dev/portfolio/ |
-| 2 | React Components Practice | https://adithya-jithesh.github.io/Skill-Nexis-Full-Stack-Web-Dev/shop/ |
-| 3 | Mini Project - Blog UI | https://adithya-jithesh.github.io/Skill-Nexis-Full-Stack-Web-Dev/blog/ |
+- [Portfolio](https://adithya-jithesh.github.io/Skill-Nexis-Full-Stack-Web-Dev/portfolio/)
+- [React components practice](https://adithya-jithesh.github.io/Skill-Nexis-Full-Stack-Web-Dev/shop/)
+- [Blog UI](https://adithya-jithesh.github.io/Skill-Nexis-Full-Stack-Web-Dev/blog/)
+
+Week 2 is Node and MongoDB, so there's nothing to host on Pages - those run
+locally. More on that at the bottom.
 
 ---
 
-## Week 1 - Frontend Fundamentals (HTML, CSS, React Basics)
+## Week 1 - HTML, CSS and React basics
 
-**Topics:** HTML5 semantic structure · CSS3 (Flexbox, Grid, Responsive Design) · JavaScript ES6+ · React basics (Components, Props, State, Events)
+| # | Deliverable | Folder |
+|---|-------------|--------|
+| 1 | Personal portfolio | [`Week1/01-portfolio`](Week1/01-portfolio) |
+| 2 | React components practice | [`Week1/02-react-components`](Week1/02-react-components) |
+| 3 | Mini project - blog UI | [`Week1/03-react-blog-ui`](Week1/03-react-blog-ui) |
 
-| # | Deliverable | Folder | Status |
-|---|-------------|--------|--------|
-| 1 | Personal Portfolio Website | [`Week1/01-portfolio`](Week1/01-portfolio) | ✅ Done |
-| 2 | React Components Practice | [`Week1/02-react-components`](Week1/02-react-components) | ✅ Done |
-| 3 | Mini Project - React Blog UI | [`Week1/03-react-blog-ui`](Week1/03-react-blog-ui) | ✅ Done |
+### Portfolio
 
-### 1. Personal Portfolio Website
-Responsive portfolio built with plain HTML5, CSS3 and vanilla JavaScript - no frameworks.
+Plain HTML, CSS and vanilla JavaScript. No framework, no build step - open
+`index.html` and it works.
 
-- Semantic HTML5 structure (`header`, `nav`, `main`, `section`, `article`, `footer`)
-- Required sections: About, Education, Projects, Contact (plus Hero and Skills)
-- Responsive navigation bar with an animated hamburger menu on mobile
-- Layout built with CSS Flexbox and Grid (`auto-fit` + `minmax` responsive columns)
-- Vanilla JavaScript contact form validation with inline, per-field error messages
+It has the sections the assignment asked for (About, Education, Projects,
+Contact) plus a hero and a skills list. The markup is semantic rather than a
+pile of divs, the layout is Flexbox and Grid, and the nav collapses into a
+hamburger on mobile. The contact form is validated in JavaScript with the
+error messages shown per field instead of one alert at the end.
 
-**Run it:** open `Week1/01-portfolio/index.html` in a browser, or serve it with
+To view it: open `Week1/01-portfolio/index.html`, or serve the folder with
 `npx http-server Week1/01-portfolio -p 5500`.
 
-### 2. React Components Practice
-Five reusable components built with React 19 and Vite, wired together into a
-small supermarket app: browse products, search and filter them, add stock, and
-add items to a cart.
+### React components practice
 
-| Component | Demonstrates |
-|-----------|--------------|
-| `Button`  | Props with defaults, `children`, a `disabled` prop |
-| `Card`    | Props, conditional rendering, a value calculated from a prop |
-| `Header`  | Derived props (live cart count and total), conditional button |
-| `Form`    | `useState`, controlled inputs, validation, lifting state up |
-| `Footer`  | Pure presentational component, rendering an array with `.map()` |
+A small supermarket app built out of five components - `Button`, `Card`,
+`Header`, `Form` and `Footer`. You can add products through the form, search
+and filter the shelf, and put things in a cart. Selling an item drops the
+stock; emptying the cart puts it back.
 
-State lives in `App.jsx` and flows down through props: the form adds products,
-cards sell and remove them, the search box and category dropdown filter them,
-and the header cart updates automatically.
+The point of the assignment was props and state, so that's what the structure
+shows: everything shared lives in `App.jsx` and comes down as props, and the
+components push changes back up by calling functions their parent handed them.
+`Form` is the one with real local state, since a half-typed product isn't
+anyone else's business until it's submitted.
 
-**Run it:**
 ```bash
 cd Week1/02-react-components
 npm install
 npm run dev
 ```
 
-### 3. Mini Project - React Blog UI
-A blog that renders post cards from a local JSON file, with search and filtering.
+### Mini project - blog UI
 
-- Ten posts stored in `src/data/posts.json` and pulled in with a plain `import`
-- Post cards rendered with `.map()` over the filtered array
-- Search box matching the title, summary and tags
-- Category sidebar built from the posts themselves, so the buttons follow the data
-- Search and category apply together, with a "no posts found" message and a clear button
-- Each card expands its full text with its own `useState`, independent of the others
+Ten posts in a JSON file, rendered as cards, with a search box and category
+buttons in the sidebar.
 
-| Component | Demonstrates |
-|-----------|--------------|
-| `Header`   | Props, a live "showing x of y" count |
-| `Sidebar`  | Controlled input, list rendering, conditional class names |
-| `PostCard` | Its own local state, conditional rendering, rendering an array of tags |
-| `Footer`   | Pure presentational component |
-| `Button`   | Reused from assignment 2 |
+The posts are a plain `import` rather than a fetch, so there's no loading state
+to deal with. Search matches the title, summary and tags, and works alongside
+the category filter rather than replacing it. Each card tracks its own
+expanded/collapsed state, because whether one post is open doesn't affect any
+of the others - that was the thing I actually wanted to get right here.
 
-**Run it:**
 ```bash
 cd Week1/03-react-blog-ui
 npm install
@@ -88,81 +77,59 @@ npm run dev
 
 ---
 
-## Week 2 - Backend Development (Node.js, Express.js, MongoDB)
+## Week 2 - Node, Express and MongoDB
 
-**Topics:** Node.js basics and NPM setup - Express.js framework and routing - MongoDB and Mongoose - REST API design principles - Authentication using JWT and bcrypt
+| # | Deliverable | Folder | Port |
+|---|-------------|--------|------|
+| 1 | To-do list REST API | [`Week2/01-todo-api`](Week2/01-todo-api) | 5000 |
+| 2 | User authentication API | [`Week2/02-auth-api`](Week2/02-auth-api) | 5001 |
+| 3 | Mini project - notes app backend | [`Week2/03-notes-app-backend`](Week2/03-notes-app-backend) | 5002 |
+| + | Notes app frontend (extra) | [`Week2/04-notes-app-frontend`](Week2/04-notes-app-frontend) | 5173 |
+| + | React practice set (extra) | [`Week2/05-react-practice`](Week2/05-react-practice) | 5173 |
 
-| # | Deliverable | Folder | Port | Status |
-|---|-------------|--------|------|--------|
-| 1 | To-Do List REST API | [`Week2/01-todo-api`](Week2/01-todo-api) | 5000 | Done |
-| 2 | User Authentication API | [`Week2/02-auth-api`](Week2/02-auth-api) | 5001 | Done |
-| 3 | Mini Project - Notes App Backend | [`Week2/03-notes-app-backend`](Week2/03-notes-app-backend) | 5002 | Done |
-| + | Notes App Frontend (extra) | [`Week2/04-notes-app-frontend`](Week2/04-notes-app-frontend) | 5173 | Done |
-| + | React Practice Set (extra) | [`Week2/05-react-practice`](Week2/05-react-practice) | 5173 | Done |
+Three separate Express apps, each with its own README and Postman collection.
+[`Week2/README.md`](Week2/README.md) has the longer write-up; the short version:
 
-Three standalone Express APIs, each with its own README and Postman collection.
-They are Node servers with MongoDB behind them, so unlike Week 1 they are not on
-GitHub Pages - they run locally, which is what the assignment asks for. See
-[`Week2/README.md`](Week2/README.md) for the full write-up.
+**To-do API.** CRUD over tasks, with optional `?completed=` and `?priority=`
+filters. Validation sits on the Mongoose schema so bad data never gets as far
+as the database, and routes, controllers, model and error handling are all in
+separate files. Every failure comes back as JSON with a sensible status code
+rather than Express's default HTML crash page.
 
-### 1. To-Do List REST API
-CRUD endpoints for tasks, stored in MongoDB and tested in Postman.
+**Auth API.** Register and login, passwords hashed by a bcrypt `pre("save")`
+hook with a per-user salt. The hash is `select: false`, so it stays out of
+query results unless something asks for it by name - and only the login
+function does. Both routes return a signed JWT, and `/api/auth/me` needs it.
+A wrong password and an unknown email give the same error, so nobody can use
+the login endpoint to work out which addresses have accounts.
 
-- `GET`, `POST`, `PUT`, `PATCH` and `DELETE` on `/api/tasks`, with optional
-  `?completed=` and `?priority=` filters
-- Validation on the Mongoose schema, so bad data never reaches the database
-- Routes, controllers, model and error handling in separate files
-- Every failure returns JSON with the right status code, never an HTML crash page
+**Notes backend.** The mini project, and the two assignments above put
+together, plus the thing neither of them needed: notes belong to somebody.
+`router.use(protect)` guards the whole notes router in one line, and every
+query filters on `owner` as well as `_id`. Reaching for someone else's note
+gets a 404 - the same answer as a note that never existed - so the API doesn't
+leak what it's hiding. I checked that with a second account: 36 automated
+checks against a live server and database, all passing.
 
-### 2. User Authentication API
-Registration and login with hashed passwords and JWT-protected routes.
+### The two extras
 
-- Passwords hashed by a bcrypt `pre("save")` hook with a per-user salt
-- The hash is `select: false`, so it stays out of query results by default
-- `POST /api/auth/register` and `/login` return a signed JWT; `GET /api/auth/me`
-  needs it
-- Wrong password and unknown email give the same error, so the API cannot be
-  used to find out which addresses have accounts
+Week 2 stops at the API, with Postman standing in for a UI, so both of these
+are beyond what was asked.
 
-### 3. Mini Project - Notes App Backend
-A notes API with full CRUD where every note route is behind JWT auth.
+`04-notes-app-frontend` is a React client for the mini project. It logs in
+against the notes API, keeps the JWT in `localStorage` so a refresh doesn't
+throw you out, and sends it as a Bearer header on everything. A 401 clears the
+session and drops you back at the login screen. Search and tag filters ask the
+API rather than filtering a copy in the browser, which is what those query
+parameters on the backend were for in the first place.
 
-- All of `/api/notes` guarded in one line with `router.use(protect)`
-- Notes belong to a user: every query filters on `owner` as well as `_id`
-- Another user's note returns `404`, the same as one that never existed, so the
-  API gives nothing away
-- Search across title, content and tags, filter by tag or pinned, and tag counts
-- Verified with 36 automated checks against a live server and database,
-  including a second account that cannot read, change or delete the first
-  account's notes
+`05-react-practice` covers the Week 2 practice set, which is React rather than
+backend. Questions 1 and 2 were already answered by the Week 1 projects, so
+this one handles the rest: a to-do with add and delete, React Router across
+four routes behind a shared layout, and a `*.module.css` file per component.
 
-### Extra - Notes App Frontend
-Not asked for by Week 2, which stops at the API. A React app that makes the
-mini project usable without Postman.
+**Running any of the backends:**
 
-- Logs in against the notes API and keeps the JWT in `localStorage`, so a
-  refresh does not log you out
-- Sends it as `Authorization: Bearer <token>` on every request; a `401` clears
-  the session and returns to the login screen
-- Write, edit, pin and delete notes, with search and tag filters
-- Searching and filtering ask the API rather than filtering a local copy, so
-  the database does the work
-
-### Extra - React Practice Set
-The Week 2 practice set is React rather than backend. Questions 1 and 2 were
-already covered by the Week 1 React projects, so this app answers the other
-three: a to-do with add and delete, React Router navigation, and CSS modules.
-
-- Task list held as state in the page, passed down to the form and the list as
-  props; add, delete and toggle each build a new array instead of editing one
-- Four routes behind a shared `Layout`, so the nav bar and footer are written
-  once and `<Outlet />` marks where the page goes, plus a `*` catch-all
-- `NavLink` highlights the current tab from the `isActive` flag it passes to
-  `className`, with no state of our own
-- Every component has its own `*.module.css`, so class names cannot collide -
-  `.body` exists twice in the built CSS under two different hashed names
-
-**Run any of them:**
 ```bash
 cd Week2/01-todo-api      # or 02-auth-api, or 03-notes-app-backend
 npm install
@@ -176,20 +143,24 @@ npm run dev
 
 ```
 .
-├── README.md
-├── Week1/                          # Frontend - HTML, CSS, React
-│   ├── 01-portfolio/               # HTML + CSS + vanilla JS
-│   │   ├── index.html
-│   │   ├── css/style.css
-│   │   └── js/script.js
+├── Week1/                          # HTML, CSS, React
+│   ├── 01-portfolio/               # HTML + CSS + vanilla JS, no build step
 │   ├── 02-react-components/        # Vite + React
 │   └── 03-react-blog-ui/           # Vite + React
-└── Week2/                          # Backend - Node, Express, MongoDB
+└── Week2/                          # Node, Express, MongoDB
     ├── 01-todo-api/                # Express + Mongoose
     │   ├── src/                    # server, config, models, routes, controllers, middleware
-    │   └── postman/                # importable Postman collection
+    │   └── postman/                # importable collection
     ├── 02-auth-api/                # + bcrypt and JWT
     ├── 03-notes-app-backend/       # CRUD behind JWT, notes owned by a user
-    ├── 04-notes-app-frontend/      # Vite + React client for the mini project
+    ├── 04-notes-app-frontend/      # React client for the mini project
     └── 05-react-practice/          # practice set - router + CSS modules
 ```
+
+## Why Week 2 isn't hosted
+
+GitHub Pages only serves static files. The Week 2 projects are Node servers
+with a database behind them, so there's nothing for Pages to serve - they run
+locally against a local MongoDB, which is what the assignment asked for anyway
+(MongoDB for storage, Postman for testing). Pointing any of them at MongoDB
+Atlas instead is a one-line change in `.env`.

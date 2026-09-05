@@ -1,24 +1,22 @@
 # React Blog UI
 
-SkillNexis Week 1, assignment 3 (mini project). A blog that renders post cards
-from a local JSON file, with search and category filtering.
+Week 1, assignment 3 - the mini project. A blog that renders post cards out of
+a local JSON file, with a search box and category filtering.
 
-The ten posts live in `src/data/posts.json` and are pulled in with a plain
-`import`, so there is no fetch and nothing to wait for. Search matches the
-title, summary and tags, and works together with the category buttons.
+The ten posts sit in `src/data/posts.json` and come in through a plain
+`import`, so there's no fetch and no loading state to design around. Search
+matches the title, summary and tags, and works alongside the category buttons
+instead of replacing them.
 
 `search` and `category` live in `src/App.jsx` because the sidebar sets them and
-the post list reads them. Whether a post is expanded lives inside that
-`PostCard`, since it affects nothing else.
-
-## Run it
+the post list reads them. Whether a post is expanded stays inside that
+`PostCard` - opening one shouldn't do anything to the others, and keeping it
+local is what guarantees that.
 
 ```bash
 npm install
 npm run dev
 ```
-
-## Files
 
 ```
 src/

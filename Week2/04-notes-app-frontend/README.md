@@ -1,32 +1,32 @@
 # Notes App Frontend
 
 A React front end for the [notes backend](../03-notes-app-backend). It logs in,
-holds on to the JWT, and sends it with every request so the backend knows whose
-notes to hand back. Built with Vite and React 19, plain CSS, same theme as the
-Week 1 apps.
+hangs on to the JWT, and sends it with every request so the API knows whose
+notes to hand over. Vite and React 19, plain CSS, same theme as the Week 1 apps.
 
-This is the piece that turns the mini project into something you can use
-without Postman.
+This is the bit that makes the mini project usable without Postman. Week 2
+didn't ask for it.
 
-## What it does
+## What you can do with it
 
-- Sign up or log in, with the API's own error messages shown on the form
-- Write, edit, pin and delete notes
-- Search as you type, and filter by tag - both done by the API, not in the browser
-- A tag list built from `/api/notes/tags`, showing how often each tag is used
-- Stays logged in across a refresh, and drops you back to the login screen if
-  the token expires
+Sign up or log in - the API's own error messages get shown on the form rather
+than being swallowed. Write notes, edit them, pin them, delete them. Search as
+you type, filter by tag. The tag list comes from `/api/notes/tags` and shows
+how often each one is used.
+
+It keeps you logged in across a refresh, and drops you back at the login screen
+if the token expires.
 
 ## Running it
 
-The backend has to be running first:
+The backend needs to be up first:
 
 ```bash
 cd Week2/03-notes-app-backend
 npm install && npm run dev          # http://localhost:5002
 ```
 
-Then, in a second terminal:
+Then in another terminal:
 
 ```bash
 cd Week2/04-notes-app-frontend
@@ -35,57 +35,55 @@ cp .env.example .env
 npm run dev                          # http://localhost:5173
 ```
 
-`VITE_API_URL` in `.env` says where the backend is. Vite only exposes variables
-beginning with `VITE_` to browser code, which is why the name looks like that.
+`VITE_API_URL` in `.env` says where the backend is. The prefix isn't
+decoration - Vite only exposes variables starting with `VITE_` to browser
+code, which is a sensible default given everything in `.env` would otherwise
+end up in the bundle.
 
-## How it talks to the backend
+## Talking to the API
 
 Everything goes through `src/api.js`, so no component ever calls `fetch`
 itself. It attaches the token, turns a failed response into a thrown `Error`
-carrying the API's message, and says something useful when the backend simply
-is not running.
+carrying whatever the API said, and gives a useful message when the backend
+just isn't running - which is the error you actually hit most while developing.
 
-```
-login  ->  { token, user }  ->  saved in localStorage and in App state
-                            ->  sent as: Authorization: Bearer <token>
-```
+Logging in returns `{ token, user }`. The token goes into `localStorage` and
+into App state, and from then on rides along as `Authorization: Bearer <token>`.
+`localStorage` is what stops a refresh logging you out. If anything ever comes
+back 401 - expired, or rejected - `App` clears the session and shows the login
+screen with "Your session has expired."
 
-The token lives in `localStorage`, so a refresh does not log you out. If a
-request ever comes back `401` - an expired or rejected token - `App` clears the
-session and shows the login screen with "Your session has expired."
+## Where state lives
 
-## Where the state lives
-
-`App.jsx` owns everything the whole app cares about: the token, the user, the
-notes, the search text and the active tag. Components below it take props and
-call back up.
+`App.jsx` owns everything the app as a whole cares about: token, user, notes,
+search text, active tag. Everything below takes props and calls back up.
 
 | Component | What it does |
 |-----------|--------------|
-| `AuthForm` | Log in / sign up. One form, two modes, its own typed values |
-| `Header`   | Title, who is logged in, note count, log out |
+| `AuthForm` | Log in / sign up. One form, two modes, holds what's typed |
+| `Header`   | Title, who's logged in, note count, log out |
 | `NoteForm` | Writes a new note, and doubles as the editor for an existing one |
 | `NoteCard` | One note, with edit / pin / delete. No state of its own |
 | `Sidebar`  | Search box and the tag list from the API |
-| `Footer`   | Presentational only |
+| `Footer`   | Presentational |
 
-Searching and filtering are **not** done in the browser. Changing either one
-re-asks the API, which is what the `?search=` and `?tag=` query parameters on
-the backend are for. That means filtering keeps working no matter how many
-notes exist, because the database does the work.
+Search and tag filtering aren't done in the browser. Changing either re-asks
+the API, which is what `?search=` and `?tag=` on the backend were built for.
+Filtering a local copy would have been less code, but it stops scaling the
+moment there are more notes than you'd want to ship to the browser at once.
 
-`NoteForm` is where `useEffect` genuinely earns its place: when App hands it a
-note to edit, the form has to load that note into its boxes, because the state
-it shows has to follow a prop that changed somewhere else.
+`NoteForm` is the one place `useEffect` genuinely earns its keep: when App
+hands it a note to edit, the form has to load that note into its boxes,
+because what it's showing has to follow a prop that changed elsewhere.
 
 ## Checked in a browser
 
-Signed up, wrote a note, and confirmed against the running API:
+Signed up, wrote a note, and watched what the API did with it:
 
-- Tags typed as `Express, Security, JWT` came back `#express #security #jwt` -
-  the backend lowercases them
-- The tag sidebar filled in with counts from the aggregation endpoint
-- Pinning moved the note to the top and gave it the accent border and badge
-- Searching `salts` narrowed three notes to one, and the header count followed
-- A full page refresh kept the session
-- No console errors or React warnings
+- tags typed as `Express, Security, JWT` came back `#express #security #jwt`,
+  so the backend's lowercasing works end to end
+- the tag sidebar filled in with counts from the aggregation endpoint
+- pinning moved the note to the top and gave it the accent border and badge
+- searching `salts` cut three notes down to one, and the header count followed
+- a full refresh kept the session
+- no console errors, no React warnings

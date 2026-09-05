@@ -1,23 +1,22 @@
 # React Components Practice
 
-SkillNexis Week 1, assignment 2. A small supermarket app built from five
-reusable components: `Header`, `Footer`, `Card`, `Button` and `Form`.
+Week 1, assignment 2. A small supermarket app put together from five reusable
+components: `Header`, `Footer`, `Card`, `Button` and `Form`.
 
-Add products through the form, search and filter the shelf, and add items to a
-cart. Selling an item takes it off the shelf, and emptying the cart puts it
-back.
+You can add products through the form, search and filter the shelf, and drop
+things into a cart. Selling an item takes it off the shelf, and emptying the
+cart puts it back.
 
-All shared state lives in `src/App.jsx` and is passed down as props. The
-components send changes back up by calling functions the parent gave them.
-
-## Run it
+The assignment was really about props and state, so that's what the structure
+is built around. Everything shared lives in `src/App.jsx` and comes down as
+props; the components push changes back up by calling functions their parent
+gave them. `Form` is the one holding local state of its own, since a
+half-typed product isn't anybody else's business until it's submitted.
 
 ```bash
 npm install
 npm run dev
 ```
-
-## Files
 
 ```
 src/
