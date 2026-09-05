@@ -1,0 +1,23 @@
+/* Scoped to the NotFound page. */
+
+.wrap {
+  text-align: center;
+  padding: var(--s7) var(--s4);
+}
+
+.code {
+  margin: 0;
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--line);
+}
+
+.body {
+  color: var(--ink-2);
+}
+
+.link {
+  color: var(--brand);
+  font-weight: 600;
+}

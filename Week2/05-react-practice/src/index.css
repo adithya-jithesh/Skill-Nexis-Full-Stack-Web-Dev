@@ -1,0 +1,70 @@
+/* ============================================================
+   Global stylesheet - deliberately small.
+
+   Practice question 5 asks for CSS modules, so per-component styling
+   lives in the *.module.css file next to each component. Only the
+   things that cannot be scoped to one component belong here: the
+   reset, the shared custom properties, and the <body> rules.
+   ============================================================ */
+
+:root {
+  /* Colour */
+  --bg: #eef1f5;
+  --surface: #ffffff;
+  --surface-2: #f7f9fb;
+  --ink: #16202c;
+  --ink-2: #48566a;
+  --muted: #7a8798;
+  --line: #e2e8ef;
+  --brand: #1f4e79;
+  --brand-dark: #163a5b;
+  --brand-light: #e9f0f7;
+  --accent: #c8951b;
+  --danger: #a8352b;
+  --danger-light: #fdf0ee;
+  --ok: #1f6b4d;
+  --ok-light: #eaf5ef;
+
+  /* One spacing scale, so gaps stay consistent */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s7: 48px;
+
+  --radius: 10px;
+  --radius-sm: 6px;
+
+  --shadow: 0 1px 2px rgba(16, 32, 48, 0.05), 0 1px 3px rgba(16, 32, 48, 0.08);
+  --shadow-lg: 0 4px 12px rgba(16, 32, 48, 0.1), 0 2px 4px rgba(16, 32, 48, 0.06);
+
+  --sans: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink);
+  background-color: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.25;
+  margin: 0 0 var(--s3);
+}
+
+p {
+  margin: 0 0 var(--s3);
+}

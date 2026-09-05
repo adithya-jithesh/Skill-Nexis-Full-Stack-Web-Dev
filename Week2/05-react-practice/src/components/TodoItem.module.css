@@ -1,0 +1,65 @@
+/* Scoped to TodoItem. */
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s3) var(--s4);
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+}
+
+.item:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.label {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  cursor: pointer;
+  min-width: 0;
+}
+
+.checkbox {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--brand);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.text {
+  overflow-wrap: anywhere;
+}
+
+/* Put on the row alongside .item once the task is ticked off */
+.itemDone {
+  background-color: var(--surface-2);
+}
+
+.itemDone .text {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.delete {
+  padding: var(--s1) var(--s3);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--danger);
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.delete:hover {
+  background-color: var(--danger-light);
+  border-color: var(--danger);
+}

@@ -1,0 +1,13 @@
+/* Scoped to the Todos page. */
+
+.intro {
+  color: var(--ink-2);
+  margin-bottom: var(--s5);
+}
+
+.count {
+  margin: var(--s4) 0 0;
+  font-size: 13px;
+  color: var(--muted);
+  text-align: right;
+}

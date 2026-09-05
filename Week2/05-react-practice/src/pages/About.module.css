@@ -1,0 +1,53 @@
+/* Scoped to the About page. */
+
+.heading {
+  margin-top: var(--s5);
+  font-size: 15px;
+  color: var(--brand-dark);
+}
+
+.body {
+  color: var(--ink-2);
+}
+
+.code {
+  padding: 1px 5px;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 13px;
+  color: var(--ink);
+  background-color: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+
+.table {
+  width: 100%;
+  margin-bottom: var(--s4);
+  border-collapse: collapse;
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  font-size: 14px;
+}
+
+.table th,
+.table td {
+  padding: var(--s2) var(--s3);
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+
+.table th {
+  background-color: var(--surface-2);
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.note {
+  color: var(--muted);
+}

@@ -98,6 +98,7 @@ npm run dev
 | 2 | User Authentication API | [`Week2/02-auth-api`](Week2/02-auth-api) | 5001 | Done |
 | 3 | Mini Project - Notes App Backend | [`Week2/03-notes-app-backend`](Week2/03-notes-app-backend) | 5002 | Done |
 | + | Notes App Frontend (extra) | [`Week2/04-notes-app-frontend`](Week2/04-notes-app-frontend) | 5173 | Done |
+| + | React Practice Set (extra) | [`Week2/05-react-practice`](Week2/05-react-practice) | 5173 | Done |
 
 Three standalone Express APIs, each with its own README and Postman collection.
 They are Node servers with MongoDB behind them, so unlike Week 1 they are not on
@@ -147,6 +148,20 @@ mini project usable without Postman.
 - Searching and filtering ask the API rather than filtering a local copy, so
   the database does the work
 
+### Extra - React Practice Set
+The Week 2 practice set is React rather than backend. Questions 1 and 2 were
+already covered by the Week 1 React projects, so this app answers the other
+three: a to-do with add and delete, React Router navigation, and CSS modules.
+
+- Task list held as state in the page, passed down to the form and the list as
+  props; add, delete and toggle each build a new array instead of editing one
+- Four routes behind a shared `Layout`, so the nav bar and footer are written
+  once and `<Outlet />` marks where the page goes, plus a `*` catch-all
+- `NavLink` highlights the current tab from the `isActive` flag it passes to
+  `className`, with no state of our own
+- Every component has its own `*.module.css`, so class names cannot collide -
+  `.body` exists twice in the built CSS under two different hashed names
+
 **Run any of them:**
 ```bash
 cd Week2/01-todo-api      # or 02-auth-api, or 03-notes-app-backend
@@ -174,5 +189,7 @@ npm run dev
     │   ├── src/                    # server, config, models, routes, controllers, middleware
     │   └── postman/                # importable Postman collection
     ├── 02-auth-api/                # + bcrypt and JWT
-    └── 03-notes-app-backend/       # CRUD behind JWT, notes owned by a user
+    ├── 03-notes-app-backend/       # CRUD behind JWT, notes owned by a user
+    ├── 04-notes-app-frontend/      # Vite + React client for the mini project
+    └── 05-react-practice/          # practice set - router + CSS modules
 ```

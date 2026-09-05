@@ -1,0 +1,49 @@
+/* Scoped to TodoForm. */
+
+.form {
+  margin-bottom: var(--s5);
+}
+
+.row {
+  display: flex;
+  gap: var(--s2);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  padding: var(--s3) var(--s4);
+  font: inherit;
+  color: var(--ink);
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.input:focus {
+  outline: 2px solid var(--brand);
+  outline-offset: -1px;
+  border-color: var(--brand);
+}
+
+.button {
+  padding: var(--s3) var(--s5);
+  font: inherit;
+  font-weight: 600;
+  color: #fff;
+  background-color: var(--brand);
+  border: 1px solid var(--brand);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: var(--brand-dark);
+  border-color: var(--brand-dark);
+}
+
+.error {
+  margin: var(--s2) 0 0;
+  font-size: 13px;
+  color: var(--danger);
+}

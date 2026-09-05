@@ -10,6 +10,7 @@ and bcrypt
 | 2 | User Authentication API | [`02-auth-api`](02-auth-api) | 5001 | Done |
 | 3 | Mini Project - Notes App Backend | [`03-notes-app-backend`](03-notes-app-backend) | 5002 | Done |
 | + | Notes App Frontend (extra, not required) | [`04-notes-app-frontend`](04-notes-app-frontend) | 5173 | Done |
+| + | React Practice Set (extra, not required) | [`05-react-practice`](05-react-practice) | 5173 | Done |
 
 Each folder is a standalone Express app with its own `package.json`, `.env.example`,
 README and Postman collection, so any one of them can be run and marked on its own.
@@ -95,6 +96,15 @@ is an extra: a React app that logs in against the notes API, keeps the JWT in
 localStorage and sends it as a Bearer header, so the mini project can be
 demonstrated without Postman. Run the backend on 5002 first, then the front end
 on 5173.
+
+## The practice set
+
+The Week 2 practice set PDF is React, not backend, so it does not overlap with
+anything above. Questions 1 and 2 - a component showing product info, props and
+state - were already answered in Week 1. `05-react-practice` answers the
+remaining three in one small app: a to-do with add and delete, React Router
+navigation across four routes, and CSS modules for every component. No backend
+and no `.env`; `npm install && npm run dev` is all it needs.
 
 ## Note on hosting
 
