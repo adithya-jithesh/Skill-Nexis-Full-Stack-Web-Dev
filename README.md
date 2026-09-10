@@ -12,8 +12,8 @@ The Week 1 projects are static, so they're on GitHub Pages:
 - [React components practice](https://adithya-jithesh.github.io/Skill-Nexis-Full-Stack-Web-Dev/shop/)
 - [Blog UI](https://adithya-jithesh.github.io/Skill-Nexis-Full-Stack-Web-Dev/blog/)
 
-Week 2 is Node and MongoDB, so there's nothing to host on Pages - those run
-locally. More on that at the bottom.
+Weeks 2 and 3 are Node and MongoDB, so there's nothing to host on Pages -
+those run locally. More on that at the bottom.
 
 ---
 
@@ -139,6 +139,54 @@ npm run dev
 
 ---
 
+## Week 3 - Connecting the front end to the back end
+
+| # | Deliverable | Folder | Ports |
+|---|-------------|--------|-------|
+| 1 | Full stack to-do application | [`Week3/01-fullstack-todo`](Week3/01-fullstack-todo) | api 5003, client 5173 |
+| 2 | Image upload feature | [`Week3/02-image-upload`](Week3/02-image-upload) | api 5004, client 5174 |
+| 3 | Mini project - task manager | [`Week3/03-task-manager`](Week3/03-task-manager) | api 5005, client 5175 |
+
+Each of these is two programs: a `server/` and a `client/`, with their own
+`package.json` and README. [`Week3/README.md`](Week3/README.md) has the longer
+write-up.
+
+**Full stack to-do.** The Week 2 to-do API with a React client in front of it,
+and the two Week 2 assignments joined up - tasks now sit behind a login and
+each account only sees its own. Axios with interceptors, so the token is
+attached in one place and a 401 ends the session in one place. The session
+lives in a context rather than being passed down as props, and React Router
+guards the task routes. That guard is convenience, though: what actually
+protects the data is the server checking the token on every request.
+
+**Image upload.** A file cannot travel as JSON, so the form posts
+`multipart/form-data` and Multer parses it. Files land on disk under a random
+name rather than the one the browser sent - two people uploading `photo.jpg`
+would otherwise overwrite each other, and a name like `../../src/server.js`
+would write outside the uploads folder. The type check makes the claimed MIME
+type and the file extension agree, and a failed database write deletes the file
+again so nothing is left orphaned. On the client, the preview is drawn from the
+file already in memory, before anything is sent.
+
+**Task manager.** The mini project, and the two above put together. Tasks move
+through to do, doing and done, and the board filters by status, priority, tag,
+text and due date - all of it done by MongoDB, along with the sorting, the
+paging and the dashboard counts. The filters are kept in the URL rather than in
+state, so a filtered board is a link you can bookmark or send to someone. The
+avatar upload is assignment 2 reused at a smaller limit. Checked with 67
+automated tests against a live server, database and disk.
+
+**Running any of them:**
+
+```bash
+cd Week3/01-fullstack-todo/server     # then the client, in a second terminal
+npm install
+cp .env.example .env
+npm run dev
+```
+
+---
+
 ## Repository structure
 
 ```
@@ -147,20 +195,24 @@ npm run dev
 │   ├── 01-portfolio/               # HTML + CSS + vanilla JS, no build step
 │   ├── 02-react-components/        # Vite + React
 │   └── 03-react-blog-ui/           # Vite + React
-└── Week2/                          # Node, Express, MongoDB
-    ├── 01-todo-api/                # Express + Mongoose
-    │   ├── src/                    # server, config, models, routes, controllers, middleware
-    │   └── postman/                # importable collection
-    ├── 02-auth-api/                # + bcrypt and JWT
-    ├── 03-notes-app-backend/       # CRUD behind JWT, notes owned by a user
-    ├── 04-notes-app-frontend/      # React client for the mini project
-    └── 05-react-practice/          # practice set - router + CSS modules
+├── Week2/                          # Node, Express, MongoDB
+│   ├── 01-todo-api/                # Express + Mongoose
+│   │   ├── src/                    # server, config, models, routes, controllers, middleware
+│   │   └── postman/                # importable collection
+│   ├── 02-auth-api/                # + bcrypt and JWT
+│   ├── 03-notes-app-backend/       # CRUD behind JWT, notes owned by a user
+│   ├── 04-notes-app-frontend/      # React client for the mini project
+│   └── 05-react-practice/          # practice set - router + CSS modules
+└── Week3/                          # the two halves connected
+    ├── 01-fullstack-todo/          # server/ + client/
+    ├── 02-image-upload/            # Multer, with a preview and a gallery
+    └── 03-task-manager/            # mini project - login, filtering, avatars
 ```
 
-## Why Week 2 isn't hosted
+## Why Weeks 2 and 3 aren't hosted
 
-GitHub Pages only serves static files. The Week 2 projects are Node servers
-with a database behind them, so there's nothing for Pages to serve - they run
-locally against a local MongoDB, which is what the assignment asked for anyway
+GitHub Pages only serves static files. Those projects are Node servers with a
+database behind them, so there's nothing for Pages to serve - they run locally
+against a local MongoDB, which is what the assignments asked for anyway
 (MongoDB for storage, Postman for testing). Pointing any of them at MongoDB
 Atlas instead is a one-line change in `.env`.
