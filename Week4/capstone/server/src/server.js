@@ -1,4 +1,5 @@
 import "dotenv/config";
+import { createServer } from "node:http";
 import cors from "cors";
 import express from "express";
 import { connectDB } from "./config/db.js";
@@ -8,6 +9,7 @@ import authRoutes from "./routes/authRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import { initRealtime } from "./realtime.js";
 
 const app = express();
 
@@ -73,6 +75,7 @@ app.get("/", (req, res) => {
       "GET    /api/users/:username/followers": "their followers",
       "GET    /api/users/:username/following": "who they follow",
     },
+    realtime: "Socket.IO on the same port - post:new, post:counts, comment:new, presence",
   });
 });
 
@@ -100,9 +103,18 @@ if (!process.env.MONGODB_URI) {
 try {
   ensureUploadDir();
   await connectDB(process.env.MONGODB_URI);
-  app.listen(PORT, () => {
+
+  // Socket.IO needs the HTTP server rather than the Express app, because it
+  // upgrades the connection rather than handling a request - so the listening
+  // is done here instead of by app.listen(). Same port either way, which is
+  // what lets one hosted service serve both.
+  const httpServer = createServer(app);
+  initRealtime(httpServer, allowedOrigins);
+
+  httpServer.listen(PORT, () => {
     console.log("Server listening on http://localhost:" + PORT);
     console.log("Allowed origins:", allowedOrigins.join(", "));
+    console.log("Socket.IO ready on the same port");
   });
 } catch (error) {
   console.error("Could not start the server:", error.message);

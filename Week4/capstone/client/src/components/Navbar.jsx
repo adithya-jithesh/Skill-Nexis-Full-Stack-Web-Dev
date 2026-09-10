@@ -1,9 +1,11 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import Avatar from "./Avatar";
 import { useAuth } from "../context/AuthContext";
+import { useRealtime } from "../context/RealtimeContext";
 
 function Navbar() {
   const { user, isLoggedIn, logout } = useAuth();
+  const { connected, online } = useRealtime();
   const navigate = useNavigate();
 
   function handleLogout() {
@@ -24,6 +26,13 @@ function Navbar() {
       </Link>
 
       <nav className="navbar__nav">
+        {/* Proof the socket is up, and a use for it that needs no interaction:
+            the dot goes grey the moment the connection drops. */}
+        <span className={"presence" + (connected ? " presence--on" : "")} title={connected ? "Live updates on" : "Reconnecting..."}>
+          <span className="presence__dot" aria-hidden="true" />
+          {connected ? online + " online" : "offline"}
+        </span>
+
         <NavLink to="/" end className={linkClass}>
           Home
         </NavLink>

@@ -999,3 +999,56 @@ textarea.field__input {
     align-items: center;
   }
 }
+
+/* ============================================================
+   LIVE UPDATES
+   ============================================================ */
+
+/* Posts that arrived over the socket are held behind this rather than being
+   inserted, so the feed never moves under somebody's thumb. */
+.new-posts {
+  display: block;
+  width: 100%;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  padding: var(--s2) var(--s4);
+  margin-bottom: var(--s3);
+  border-radius: 999px;
+  border: 1px solid var(--brand);
+  background: var(--brand-light);
+  color: var(--brand);
+  cursor: pointer;
+}
+
+.new-posts:hover {
+  background: var(--brand);
+  color: #ffffff;
+}
+
+.presence {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s1);
+  font-size: 12px;
+  color: #9fb8cf;
+  white-space: nowrap;
+}
+
+.presence__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #9fb8cf;
+}
+
+/* Green only while the socket is actually up - it goes grey the moment the
+   connection drops, which is the honest signal. */
+.presence--on {
+  color: #b7e3c9;
+}
+
+.presence--on .presence__dot {
+  background: #63c98d;
+  box-shadow: 0 0 0 3px rgba(99, 201, 141, 0.25);
+}

@@ -70,6 +70,31 @@ blocked URL, and both the login page and the "already logged in" redirect read
 it - the second one matters, because logging in flips `isLoggedIn` and
 re-renders the route before the page's own `navigate()` runs.
 
+## Live updates
+
+One socket for the whole app, shared through `RealtimeContext`, opened inside
+`AuthProvider` so that logging in re-handshakes with the new token - otherwise
+the connection would stay anonymous and never join the room that carries the
+following feed.
+
+**New posts are held behind a pill, not inserted.** A feed that moves under your
+thumb while you are reading is infuriating, so arrivals collect and the count
+appears as "3 new posts ↑" until you ask for them.
+
+**Count events replace counts only.** `likedByMe` is this viewer's own state and
+the event does not carry it, so a like from somebody else moves the number
+without filling in your heart.
+
+**A thread subscribes while it is open** with `post:watch`, and unsubscribes on
+the way out, so two tabs on two different posts each hear only their own.
+
+**`useRealtimeEvent` keeps the handler in a ref** so that an inline arrow
+function does not tear the listener down and rebuild it on every render, and
+re-attaches after a reconnect.
+
+None of it is load-bearing: if the socket never connects, the app behaves
+exactly as it did before it existed, and the dot in the navbar goes grey.
+
 ## Checked in a browser
 
 Driven end to end in Chrome against the live API:
@@ -90,3 +115,16 @@ Driven end to end in Chrome against the live API:
 - logged out: a profile still readable, the heart disabled, the reply box gone,
   and `/settings` redirecting to the login page - which then returned to
   `/settings` after logging in.
+
+And with the live layer, watching one tab while a different account acted
+through the API:
+
+- a post from somebody else raised "1 new post ↑" without the feed moving, and
+  clicking it put that post on top;
+- their like and reply moved the numbers on the card while the tab sat idle -
+  and the heart stayed hollow, because whether *this* viewer liked it is not
+  what the event carries;
+- a reply arrived in the open thread, taking the heading from "1 reply" to
+  "2 replies";
+- the presence count read 2 while a probe socket was connected and dropped back
+  to 1 the moment it disconnected, so one tab holds exactly one socket.

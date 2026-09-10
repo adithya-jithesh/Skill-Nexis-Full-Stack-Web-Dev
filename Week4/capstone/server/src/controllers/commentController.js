@@ -1,5 +1,6 @@
 import Comment from "../models/Comment.js";
 import Post from "../models/Post.js";
+import { emitDeletedComment, emitNewComment, emitPostCounts } from "../realtime.js";
 
 function shape(comment) {
   const author = comment.author;
@@ -57,7 +58,16 @@ export async function createComment(req, res) {
   await Post.updateOne({ _id: post._id }, { $inc: { commentCount: 1 } });
   await comment.populate("author", "name username avatar");
 
-  res.status(201).json({ success: true, data: shape(comment) });
+  const body = shape(comment);
+
+  res.status(201).json({ success: true, data: body });
+
+  emitNewComment(String(post._id), body);
+  emitPostCounts({
+    id: String(post._id),
+    likeCount: post.likeCount,
+    commentCount: post.commentCount + 1,
+  });
 }
 
 // DELETE /api/comments/:id
@@ -88,4 +98,13 @@ export async function deleteComment(req, res) {
   if (post) await Post.updateOne({ _id: post._id }, { $inc: { commentCount: -1 } });
 
   res.json({ success: true, message: "Comment deleted.", data: { id: comment._id } });
+
+  if (post) {
+    emitDeletedComment(String(post._id), String(comment._id));
+    emitPostCounts({
+      id: String(post._id),
+      likeCount: post.likeCount,
+      commentCount: Math.max(post.commentCount - 1, 0),
+    });
+  }
 }

@@ -3,12 +3,14 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { api } from "../api";
 import Comments from "../components/Comments";
 import PostCard from "../components/PostCard";
+import { useRealtime, useRealtimeEvent } from "../context/RealtimeContext";
 
 // One post and its thread, on its own URL - which is the point of the route
 // parameter: it can be linked to, bookmarked and reloaded.
 function PostPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { socket, connected } = useRealtime();
 
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
@@ -39,6 +41,48 @@ function PostPage() {
       cancelled = true;
     };
   }, [id]);
+
+  // Ask the server to send this thread's events for as long as the page is
+  // open, and to stop when it is not. Rooms are per socket, so two tabs on two
+  // different posts each hear only their own.
+  useEffect(() => {
+    const current = socket.current;
+    if (!current || !connected) return;
+
+    current.emit("post:watch", id);
+
+    return () => current.emit("post:unwatch", id);
+  }, [socket, connected, id]);
+
+  useRealtimeEvent("comment:new", (payload) => {
+    if (payload.postId !== id) return;
+
+    setComments((current) =>
+      // A reply of your own is already here from the response that created it.
+      current.some((comment) => comment.id === payload.comment.id)
+        ? current
+        : [...current, payload.comment]
+    );
+  });
+
+  useRealtimeEvent("comment:deleted", (payload) => {
+    if (payload.postId !== id) return;
+    setComments((current) => current.filter((comment) => comment.id !== payload.commentId));
+  });
+
+  // Somebody else liked or replied while this page was open.
+  useRealtimeEvent("post:counts", (payload) => {
+    if (payload.id !== id) return;
+    setPost((current) =>
+      current
+        ? { ...current, likeCount: payload.likeCount, commentCount: payload.commentCount }
+        : current
+    );
+  });
+
+  useRealtimeEvent("post:deleted", (payload) => {
+    if (payload.id === id) setError("That post has been deleted.");
+  });
 
   if (loading) return <p className="loading">Loading...</p>;
 

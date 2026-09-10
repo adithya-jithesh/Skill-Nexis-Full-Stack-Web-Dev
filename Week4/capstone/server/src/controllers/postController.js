@@ -7,6 +7,7 @@ import Follow from "../models/Follow.js";
 import Like from "../models/Like.js";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
+import { emitDeletedPost, emitNewPost, emitPostCounts } from "../realtime.js";
 
 // What a post looks like in a response. The author comes back nested rather
 // than as a bare id, because every card in the feed shows a name and avatar
@@ -132,7 +133,13 @@ export async function createPost(req, res) {
     await User.updateOne({ _id: req.user._id }, { $inc: { postCount: 1 } });
     await post.populate("author", "name username avatar");
 
-    res.status(201).json({ success: true, data: shape(post, new Set()) });
+    const body = shape(post, new Set());
+
+    // Answer first, then tell everyone else. The person who wrote it already
+    // has the post in the response; a slow fan-out should not delay that.
+    res.status(201).json({ success: true, data: body });
+
+    emitNewPost(body);
   } catch (error) {
     // The image is already on disk by the time the row is written. If the
     // row fails - empty text, say - the file would sit there with nothing
@@ -166,6 +173,8 @@ export async function deletePost(req, res) {
   if (post.image) await fs.unlink(path.join(UPLOAD_DIR, post.image)).catch(() => {});
 
   res.json({ success: true, message: "Post deleted.", data: { id: post._id } });
+
+  emitDeletedPost(String(post._id));
 }
 
 // POST /api/posts/:id/like - one endpoint that toggles, because the client
@@ -204,6 +213,14 @@ export async function toggleLike(req, res) {
   const updated = await Post.findById(post._id);
 
   res.json({ success: true, data: { id: post._id, liked, likeCount: updated.likeCount } });
+
+  // Only the counts travel, never "who liked it" - whether *you* have liked a
+  // post is answered per viewer, and is nobody else's business.
+  emitPostCounts({
+    id: String(post._id),
+    likeCount: updated.likeCount,
+    commentCount: updated.commentCount,
+  });
 }
 
 // GET /api/posts/:id/likes - who liked it.

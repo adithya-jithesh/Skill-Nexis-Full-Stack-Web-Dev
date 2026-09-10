@@ -87,6 +87,46 @@ so the post carries its author's public fields rather than an id the client
 would have to resolve - and `populate` names those fields explicitly, so a
 password hash could not travel even by accident.
 
+## Live updates (Socket.IO)
+
+The optional part of the brief. Socket.IO runs on the same port as the API,
+because it upgrades an HTTP connection rather than opening a second server -
+which is also what lets one hosted service carry both.
+
+**The REST API is still the source of truth.** Every change is a normal HTTP
+request that answers with the new state; these events only tell *other* people
+that something happened. A client that never connects - a blocked network, a
+host without WebSocket support - loses nothing but the immediacy.
+
+Three kinds of room:
+
+| Room | Who is in it | What it carries |
+|------|--------------|-----------------|
+| `everyone` | every socket, logged in or not | the public timeline, count changes, deletions |
+| `user:<id>` | one account | posts by people that account follows |
+| `post:<id>` | whoever has that thread open | replies, and their removal |
+
+**Follower fan-out happens on the server.** When a post is created its author's
+followers are looked up and the event goes to their personal rooms. The
+alternative - broadcasting every post to everybody and letting each client
+decide - would mean sending people posts that are none of their business and
+asking the browser to know who it follows.
+
+**The handshake carries the same JWT as the REST calls,** and a socket without
+one is not refused: anonymous readers get the public timeline, they simply have
+no personal room. An expired or forged token is treated as anonymous rather
+than as an error, because the HTTP API is what refuses writes and it checks the
+token every single time.
+
+**Count events carry counts only.** `post:counts` sends `likeCount` and
+`commentCount`, never who liked it - whether *you* liked something is answered
+per viewer and is nobody else's business. The test suite checks the payload has
+no `likedByMe` in it.
+
+Events: `post:new`, `post:counts`, `post:deleted`, `comment:new`,
+`comment:deleted`, `presence`. The client asks for a thread with
+`post:watch` / `post:unwatch`.
+
 ## Built to be deployed
 
 This one is meant to run somewhere other than a laptop, so a few things differ
@@ -99,6 +139,9 @@ from Weeks 2 and 3:
   preview builds). Anything not on the list is refused.
 - **`/api/health` does no database work,** so a slow query cannot make the
   instance look dead and get it restarted.
+- **WebSockets need a host that supports them.** Render does; a serverless
+  platform generally does not, which is one reason the API is not going on
+  Vercel next to the front end.
 - **The upload folder is configurable** through `UPLOAD_DIR`. This matters:
   most free hosting tiers have an ephemeral filesystem, so uploaded images
   vanish on the next deploy or restart unless the folder points at a mounted
@@ -108,11 +151,21 @@ from Weeks 2 and 3:
 
 ## Checks
 
-83 automated checks against a live server, database and disk, with two
+83 automated HTTP checks against a live server, database and disk, with two
 accounts: registration and both login paths, the identical message for a wrong
 password and an unknown account, avatars (upload, serve, size and type
 refusals), posting with and without an image, the public timeline versus the
 personal feed, paging, likes including three racing at once, comment
 permissions in all three directions, following and its effect on the feed,
 people search, and deleting a post taking its likes, comments, image and count
-with it. All 83 pass.
+with it.
+
+A further 26 checks cover the live layer, with three sockets - two accounts and
+an anonymous reader - against the same running server: presence, a post
+reaching the public timeline but *not* a stranger's personal feed, the same post
+reaching a follower's feed once they follow, a like moving somebody else's
+screen, a reply arriving in an open thread and not in anybody else's, events
+stopping after `post:unwatch`, fan-out stopping after an unfollow, and a forged
+token connecting as anonymous but never receiving a personal feed.
+
+All 109 pass.
