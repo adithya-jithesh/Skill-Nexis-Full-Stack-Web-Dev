@@ -1,0 +1,261 @@
+{
+  "info": {
+    "name": "Week 3 - Image Upload API (assignment 2)",
+    "description": "SkillNexis Week 3, assignment 2. The React client at http://localhost:5174 calls exactly these routes.\n\n'Upload an image' is multipart/form-data, so Postman needs a file picked by hand: open the request, go to Body > form-data, and choose a file for the 'image' key. Postman cannot store a file inside a collection, which is why that one row is empty on import. The request saves the new id into {{imageId}} and the url into {{imageUrl}}, so everything after it runs on its own.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5004" },
+    { "key": "imageId", "value": "" },
+    { "key": "imageUrl", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Health check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/", "host": ["{{baseUrl}}"], "path": [""] }
+      }
+    },
+    {
+      "name": "Upload an image (pick a file first)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('201 Created', () => pm.response.to.have.status(201));",
+              "const image = pm.response.json().data;",
+              "pm.collectionVariables.set('imageId', image._id);",
+              "pm.collectionVariables.set('imageUrl', image.url);",
+              "pm.test('the stored name is not the uploaded name', () => pm.expect(image.filename).to.not.eql(image.originalName));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "image", "type": "file", "src": [] },
+            { "key": "caption", "value": "Uploaded from Postman", "type": "text" }
+          ]
+        },
+        "url": { "raw": "{{baseUrl}}/api/images", "host": ["{{baseUrl}}"], "path": ["api", "images"] }
+      }
+    },
+    {
+      "name": "List every image",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": ["pm.test('200 OK', () => pm.response.to.have.status(200));"]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/images", "host": ["{{baseUrl}}"], "path": ["api", "images"] }
+      }
+    },
+    {
+      "name": "Read one image record",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": ["pm.test('200 OK', () => pm.response.to.have.status(200));"]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/images/{{imageId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "images", "{{imageId}}"]
+        }
+      }
+    },
+    {
+      "name": "Fetch the file itself",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('200 OK', () => pm.response.to.have.status(200));",
+              "pm.test('comes back as an image', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('image/'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}{{imageUrl}}", "host": ["{{baseUrl}}{{imageUrl}}"] }
+      }
+    },
+    {
+      "name": "Failure cases",
+      "item": [
+        {
+          "name": "No file at all (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('400 Bad Request', () => pm.response.to.have.status(400));"]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [{ "key": "caption", "value": "no file here", "type": "text" }]
+            },
+            "url": { "raw": "{{baseUrl}}/api/images", "host": ["{{baseUrl}}"], "path": ["api", "images"] }
+          }
+        },
+        {
+          "name": "Not an image - pick a .txt or .pdf (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('400 Bad Request', () => pm.response.to.have.status(400));"]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [{ "key": "image", "type": "file", "src": [] }]
+            },
+            "url": { "raw": "{{baseUrl}}/api/images", "host": ["{{baseUrl}}"], "path": ["api", "images"] }
+          }
+        },
+        {
+          "name": "Over 2 MB - pick a big photo (413)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('413 Payload Too Large', () => pm.response.to.have.status(413));",
+                  "pm.test('the message names the limit', () => pm.expect(pm.response.json().message).to.include('2 MB'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [{ "key": "image", "type": "file", "src": [] }]
+            },
+            "url": { "raw": "{{baseUrl}}/api/images", "host": ["{{baseUrl}}"], "path": ["api", "images"] }
+          }
+        },
+        {
+          "name": "An id that does not exist (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('404 Not Found', () => pm.response.to.have.status(404));"]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/images/64b7f9c2e1a2b3c4d5e6f7a8",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "images", "64b7f9c2e1a2b3c4d5e6f7a8"]
+            }
+          }
+        },
+        {
+          "name": "A malformed id (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('400 Bad Request', () => pm.response.to.have.status(400));"]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/images/not-an-id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "images", "not-an-id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Delete the image",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": ["pm.test('200 OK', () => pm.response.to.have.status(200));"]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/images/{{imageId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "images", "{{imageId}}"]
+        }
+      }
+    },
+    {
+      "name": "The file is gone from disk too (404)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": ["pm.test('404 Not Found', () => pm.response.to.have.status(404));"]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}{{imageUrl}}", "host": ["{{baseUrl}}{{imageUrl}}"] }
+      }
+    }
+  ]
+}
