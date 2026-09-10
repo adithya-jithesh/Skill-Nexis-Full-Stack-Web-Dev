@@ -1,0 +1,3 @@
+# Uploaded avatars are whatever was tried out locally, not part of the
+# project. The folder itself is recreated on startup.
+uploads/
