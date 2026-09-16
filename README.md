@@ -13,7 +13,8 @@ The Week 1 projects are static, so they're on GitHub Pages:
 - [Blog UI](https://adithya-jithesh.github.io/Skill-Nexis-Full-Stack-Web-Dev/blog/)
 
 Weeks 2 and 3 are Node and MongoDB, so there's nothing to host on Pages -
-those run locally. More on that at the bottom.
+those run locally. Week 4 is the capstone, and that one is built to deploy
+properly: Atlas, Render and Vercel. More on that at the bottom.
 
 ---
 
@@ -187,6 +188,52 @@ npm run dev
 
 ---
 
+## Week 4 - Capstone and deployment
+
+| Deliverable | Folder | Ports |
+|-------------|--------|-------|
+| Capstone - social media feed | [`Week4/capstone`](Week4/capstone) | api 5006, client 5176 |
+
+The brief offered three projects and asked for one: e-commerce, a social media
+feed, or a project management dashboard. This is the feed, including the part
+marked optional - real-time updates over WebSockets.
+[`Week4/README.md`](Week4/README.md) has the longer write-up.
+
+You register, write posts with images, follow people, like and reply, and edit
+your profile. Reading is public and writing needs an account, so most screens
+render logged out and simply show less - which is also how the API is built,
+with an `optionalAuth` that attaches a viewer when there is one.
+
+The parts I'd point at:
+
+**Likes and follows are their own collections,** with a unique compound index,
+rather than arrays on the post. A popular post would otherwise carry thousands
+of ids into every read, and "have you liked this?" would be a scan instead of
+an indexed lookup. The index is also what makes two clicks racing each other
+safe - the database refuses the second one.
+
+**Live updates don't hold the app up.** Socket.IO runs on the same port as the
+API, and the REST API stays the source of truth: the events only tell other
+people something changed. If the socket never connects, everything still works
+and the dot in the navbar goes grey. New posts collect behind a "3 new posts ↑"
+pill rather than shoving the feed down while you're reading it.
+
+**Follower fan-out happens on the server.** Broadcasting every post to every
+browser and letting each one filter would mean sending people posts that are
+none of their business.
+
+Checked with 109 automated tests - 83 on the API, 26 driving three real sockets
+- plus an end-to-end pass in Chrome.
+
+```bash
+cd Week4/capstone/server              # then the client, in a second terminal
+npm install
+cp .env.example .env                  # needs a real JWT_SECRET
+npm run dev
+```
+
+---
+
 ## Repository structure
 
 ```
@@ -203,16 +250,30 @@ npm run dev
 │   ├── 03-notes-app-backend/       # CRUD behind JWT, notes owned by a user
 │   ├── 04-notes-app-frontend/      # React client for the mini project
 │   └── 05-react-practice/          # practice set - router + CSS modules
-└── Week3/                          # the two halves connected
-    ├── 01-fullstack-todo/          # server/ + client/
-    ├── 02-image-upload/            # Multer, with a preview and a gallery
-    └── 03-task-manager/            # mini project - login, filtering, avatars
+├── Week3/                          # the two halves connected
+│   ├── 01-fullstack-todo/          # server/ + client/
+│   ├── 02-image-upload/            # Multer, with a preview and a gallery
+│   └── 03-task-manager/            # mini project - login, filtering, avatars
+└── Week4/                          # capstone
+    └── capstone/                   # social feed
+        ├── server/                 # Express + Mongoose + Socket.IO
+        ├── client/                 # Vite + React
+        └── DEPLOYMENT.md           # Atlas + Render + Vercel
 ```
 
-## Why Weeks 2 and 3 aren't hosted
+## Why Weeks 2 and 3 aren't hosted, and Week 4 is
 
-GitHub Pages only serves static files. Those projects are Node servers with a
-database behind them, so there's nothing for Pages to serve - they run locally
-against a local MongoDB, which is what the assignments asked for anyway
-(MongoDB for storage, Postman for testing). Pointing any of them at MongoDB
-Atlas instead is a one-line change in `.env`.
+GitHub Pages only serves static files. The Week 2 and 3 projects are Node
+servers with a database behind them, so there's nothing for Pages to serve -
+they run locally against a local MongoDB, which is what those assignments asked
+for anyway (MongoDB for storage, Postman for testing). Pointing any of them at
+MongoDB Atlas instead is a one-line change in `.env`.
+
+Week 4 is the one that's meant to leave the laptop, so the capstone is built
+for it: the port comes from the environment, CORS takes a list of origins
+because a deployed site has more than one, `/api/health` does no database work
+so a slow query can't make the instance look dead, and the upload folder is
+configurable for hosts with an ephemeral filesystem.
+[`Week4/capstone/DEPLOYMENT.md`](Week4/capstone/DEPLOYMENT.md) is the
+walkthrough - Atlas, then Render, then Vercel, then back to Render to tell it
+the domain Vercel just issued.
