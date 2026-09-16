@@ -89,8 +89,26 @@ in phase 2.
   after `post:unwatch`, and that a forged token connects as anonymous but never
   receives a personal feed.
 
-All 109 pass. The client was driven end to end in Chrome on top of that - both
-READMEs list what was checked.
+All 109 pass. Start the server, then in a second terminal:
+
+```bash
+cd Week4/capstone/server
+npm test                      # both suites
+```
+
+They run against a live server, database and disk rather than against mocks,
+which is slower and needs the server up - but a mocked `Like.create` would
+cheerfully pass the test for three simultaneous likes, when the thing being
+checked is the unique index inside MongoDB. Same for the upload limits (Multer
+and the filesystem) and every socket test (a connection that really upgraded).
+
+Each run stamps its accounts with a fresh suffix so repeat runs do not collide
+on the unique username index, but they leave their data behind rather than
+tidying up - so these want a scratch database, not one with anything real in
+it.
+
+The client was driven end to end in Chrome on top of that - both of the
+capstone's READMEs list what was checked.
 
 The deployment phase turned up two bugs that local testing could not have:
 CORS refused unknown origins by throwing, which answered 500 rather than simply

@@ -179,3 +179,29 @@ stopping after `post:unwatch`, fan-out stopping after an unfollow, and a forged
 token connecting as anonymous but never receiving a personal feed.
 
 All 109 pass.
+
+They run against a **live** server rather than a mocked one - a real database,
+real disk, real sockets - so start the server first and then, in a second
+terminal:
+
+```bash
+npm test              # both suites, 109 checks
+npm run test:api      # just the 83 HTTP ones
+npm run test:realtime # just the 26 socket ones
+```
+
+Testing this way rather than with Jest and mocks is a deliberate trade. It is
+slower and it needs a server up, but a mocked `Like.create` would have happily
+passed the test for three simultaneous likes - the thing being checked there is
+the unique index in MongoDB, which only exists when MongoDB does. The same goes
+for the upload limits, which are Multer and the filesystem, and for every socket
+test, which needs a real connection to have been upgraded.
+
+Each run stamps its accounts with a fresh suffix - `alice38815674`,
+`bob38815674` - so a second run does not collide with the first on the unique
+username and email indexes. They do **not** tidy up afterwards, though: the
+accounts and most of their posts stay in the database, so a local `social_feed`
+that has been tested against a few times is mostly test data. That is fine for
+a development database and would not be fine against anything real - point
+`MONGODB_URI` at a scratch database before running these, never at the one with
+your own data in it.
