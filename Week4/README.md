@@ -12,6 +12,13 @@ The brief offered three projects and asked for one: an e-commerce app, a social
 media feed, or a project management dashboard. This is the second, including
 the part it marked optional - real-time updates over WebSockets.
 
+**Live:** [skill-nexis-full-stack-web-dev.vercel.app](https://skill-nexis-full-stack-web-dev.vercel.app)
+- the front end on Vercel, the
+[API](https://skill-nexis-full-stack-web-dev.onrender.com/api/health) on
+Render, the database on MongoDB Atlas. On the free tier the API sleeps after
+about fifteen minutes idle, so the first load after a quiet spell waits roughly
+fifty seconds while it wakes.
+
 **Presentation:** [Social Feed Capstone](https://claude.ai/code/artifact/72b68c87-89be-4041-bff4-86ce1b21748e)
 - the architecture, the decisions, the testing and the deployment story on one
 page, which is the "documentation and presentation" half of the week's topics.
@@ -122,8 +129,10 @@ not do for you.
 
 ## Deployment
 
-[`capstone/DEPLOYMENT.md`](capstone/DEPLOYMENT.md) is the walkthrough. The
-short version:
+It is deployed: [the site](https://skill-nexis-full-stack-web-dev.vercel.app),
+[the API](https://skill-nexis-full-stack-web-dev.onrender.com/api/health), and
+a database on Atlas. [`capstone/DEPLOYMENT.md`](capstone/DEPLOYMENT.md) is the
+walkthrough that got it there. The short version:
 
 | Piece | Goes on | Why |
 |-------|---------|-----|

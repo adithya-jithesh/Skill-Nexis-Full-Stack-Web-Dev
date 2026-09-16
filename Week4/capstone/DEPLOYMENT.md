@@ -1,5 +1,13 @@
 # Deploying the capstone
 
+Deployed and running:
+
+| | |
+|---|---|
+| Site | <https://skill-nexis-full-stack-web-dev.vercel.app> |
+| API | <https://skill-nexis-full-stack-web-dev.onrender.com/api/health> |
+| Database | MongoDB Atlas, cluster `Cluster0`, database `social_feed` |
+
 Three services, because the app is three things: a database, a Node server that
 holds WebSockets open, and a folder of static files.
 

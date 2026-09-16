@@ -13,8 +13,13 @@ The Week 1 projects are static, so they're on GitHub Pages:
 - [Blog UI](https://adithya-jithesh.github.io/Skill-Nexis-Full-Stack-Web-Dev/blog/)
 
 Weeks 2 and 3 are Node and MongoDB, so there's nothing to host on Pages -
-those run locally. Week 4 is the capstone, and that one is built to deploy
-properly: Atlas, Render and Vercel. More on that at the bottom.
+those run locally. Week 4 is the capstone, and that one is deployed for real:
+
+- **[The social feed](https://skill-nexis-full-stack-web-dev.vercel.app)** - the
+  Week 4 capstone, live on Vercel, with its API on Render and its database on
+  MongoDB Atlas.
+
+More on how that is put together at the bottom.
 
 ---
 
@@ -194,6 +199,12 @@ npm run dev
 |-------------|--------|-------|
 | Capstone - social media feed | [`Week4/capstone`](Week4/capstone) | api 5006, client 5176 |
 
+**Live:** [the site](https://skill-nexis-full-stack-web-dev.vercel.app) (Vercel)
+· [the API](https://skill-nexis-full-stack-web-dev.onrender.com/api/health)
+(Render) · database on MongoDB Atlas. The API sleeps after about fifteen
+minutes idle, so the first request after a quiet spell takes roughly fifty
+seconds to wake it - that is the free tier, not the app.
+
 The brief offered three projects and asked for one: e-commerce, a social media
 feed, or a project management dashboard. This is the feed, including the part
 marked optional - real-time updates over WebSockets.
@@ -271,11 +282,14 @@ they run locally against a local MongoDB, which is what those assignments asked
 for anyway (MongoDB for storage, Postman for testing). Pointing any of them at
 MongoDB Atlas instead is a one-line change in `.env`.
 
-Week 4 is the one that's meant to leave the laptop, so the capstone is built
-for it: the port comes from the environment, CORS takes a list of origins
-because a deployed site has more than one, `/api/health` does no database work
-so a slow query can't make the instance look dead, and the upload folder is
-configurable for hosts with an ephemeral filesystem.
+Week 4 is the one that's meant to leave the laptop, and it has:
+[the site](https://skill-nexis-full-stack-web-dev.vercel.app) on Vercel,
+[the API](https://skill-nexis-full-stack-web-dev.onrender.com/api/health) on
+Render, the database on Atlas. The capstone is built for it: the port comes
+from the environment, CORS takes a list of origins because a deployed site has
+more than one, `/api/health` does no database work so a slow query can't make
+the instance look dead, and the upload folder is configurable for hosts with an
+ephemeral filesystem.
 [`Week4/capstone/DEPLOYMENT.md`](Week4/capstone/DEPLOYMENT.md) is the
 walkthrough - Atlas, then Render, then Vercel, then back to Render to tell it
 the domain Vercel just issued.
