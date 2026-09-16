@@ -1,0 +1,48 @@
+# Render's blueprint format, kept here as the written-down version of what the
+# dashboard is set to. Render only auto-detects a blueprint at the root of a
+# repository, and this one holds four weeks of coursework rather than a single
+# app - so the service was created through the dashboard instead, with the
+# settings below. DEPLOYMENT.md walks through them.
+
+services:
+  - type: web
+    name: social-feed-api
+    runtime: node
+
+    # The monorepo bit: without this, Render builds from the repository root,
+    # finds no package.json, and fails.
+    rootDir: Week4/capstone/server
+
+    buildCommand: npm install
+    startCommand: npm start
+
+    # Pinged to decide whether the instance is alive. It does no database work,
+    # so a slow query cannot make a healthy instance look dead.
+    healthCheckPath: /api/health
+
+    envVars:
+      # Render sets PORT itself; the server reads it rather than choosing.
+      - key: MONGODB_URI
+        sync: false # the Atlas connection string - set in the dashboard, never committed
+      - key: JWT_SECRET
+        sync: false # generated once, and not the placeholder from .env.example
+      - key: CLIENT_URL
+        sync: false # the Vercel domain(s), comma separated
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      # Not optional. The error handler only withholds stack traces when this
+      # says "production", and Render does not set it for you - so leaving it
+      # out means every 500 answers a stranger with a stack trace and the
+      # absolute paths of the source files.
+      - key: NODE_ENV
+        value: production
+
+    # Uploaded images need a disk that survives a restart, and disks are a paid
+    # feature. On the free tier leave this commented out and know what it costs:
+    # the filesystem is wiped on every deploy and every spin-down, so avatars
+    # and post images disappear while the database rows still point at them.
+    # disk:
+    #   name: uploads
+    #   mountPath: /var/data/uploads
+    #   sizeGB: 1
+    # ...and then set UPLOAD_DIR=/var/data/uploads in envVars.

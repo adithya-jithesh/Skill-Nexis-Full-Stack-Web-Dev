@@ -32,7 +32,19 @@ app.use(
       // No origin at all means a server-to-server call or a tool like curl,
       // which CORS does not apply to.
       if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
-      callback(new Error("Origin " + origin + " is not allowed by CORS."));
+
+      // An origin that is not on the list is refused by *omitting* the
+      // Access-Control-Allow-Origin header, not by raising an error. Throwing
+      // here sends the request down the error handler, which answers 500 - and
+      // a stranger's origin is not a fault in this server, it is the policy
+      // working. It also filled the logs with 500s and made every preflight
+      // from a preview URL look like an outage.
+      //
+      // Worth being clear about what this does and does not do: CORS is a rule
+      // the *browser* enforces, so this stops a page on another domain from
+      // reading the response. It is not access control - curl and Postman
+      // ignore all of it. What actually protects anything here is the JWT.
+      callback(null, false);
     },
   })
 );

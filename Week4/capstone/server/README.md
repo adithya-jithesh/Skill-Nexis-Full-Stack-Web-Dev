@@ -136,7 +136,17 @@ from Weeks 2 and 3:
   5006 is only the local fallback.
 - **CORS takes a list.** `CLIENT_URL` is comma separated, because a deployed
   site usually has more than one legitimate origin (the real domain, and
-  preview builds). Anything not on the list is refused.
+  preview builds). An origin not on the list is refused by leaving the
+  `Access-Control-Allow-Origin` header off the response - not by raising an
+  error. The first version threw, which answered 500: a stranger's origin is
+  the policy working, not a fault in this server, and as a 500 it filled the
+  logs and made every preflight from a preview URL look like an outage. Worth
+  saying plainly, though - CORS is enforced by the *browser*, so it stops
+  another site's page from reading a response. It is not access control, and
+  curl ignores all of it. The JWT is what protects anything.
+- **`NODE_ENV` has to say `production` on the host.** It is what stops the
+  error handler putting a stack trace, with the server's absolute file paths,
+  into a failed response - and a host does not necessarily set it for you.
 - **`/api/health` does no database work,** so a slow query cannot make the
   instance look dead and get it restarted.
 - **WebSockets need a host that supports them.** Render does; a serverless
@@ -145,7 +155,7 @@ from Weeks 2 and 3:
 - **The upload folder is configurable** through `UPLOAD_DIR`. This matters:
   most free hosting tiers have an ephemeral filesystem, so uploaded images
   vanish on the next deploy or restart unless the folder points at a mounted
-  disk. `DEPLOYMENT.md` covers it in the deployment phase.
+  disk. [`../DEPLOYMENT.md`](../DEPLOYMENT.md) covers it.
 - **The server refuses to start** on a missing `MONGODB_URI` or a placeholder
   `JWT_SECRET`, rather than booting into a broken state.
 
