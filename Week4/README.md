@@ -12,6 +12,10 @@ The brief offered three projects and asked for one: an e-commerce app, a social
 media feed, or a project management dashboard. This is the second, including
 the part it marked optional - real-time updates over WebSockets.
 
+**Presentation:** [Social Feed Capstone](https://claude.ai/code/artifact/72b68c87-89be-4041-bff4-86ce1b21748e)
+- the architecture, the decisions, the testing and the deployment story on one
+page, which is the "documentation and presentation" half of the week's topics.
+
 ## What it is
 
 A social feed. You register, write posts with images, follow people, like and

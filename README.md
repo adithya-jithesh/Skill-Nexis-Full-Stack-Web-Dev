@@ -197,7 +197,9 @@ npm run dev
 The brief offered three projects and asked for one: e-commerce, a social media
 feed, or a project management dashboard. This is the feed, including the part
 marked optional - real-time updates over WebSockets.
-[`Week4/README.md`](Week4/README.md) has the longer write-up.
+[`Week4/README.md`](Week4/README.md) has the longer write-up, and the
+[presentation](https://claude.ai/code/artifact/72b68c87-89be-4041-bff4-86ce1b21748e)
+puts the architecture, decisions, testing and deployment on one page.
 
 You register, write posts with images, follow people, like and reply, and edit
 your profile. Reading is public and writing needs an account, so most screens
